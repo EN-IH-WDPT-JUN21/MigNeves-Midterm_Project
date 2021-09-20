@@ -1,31 +1,85 @@
 package com.example.midtermProject.dao;
 
 import com.example.midtermProject.enums.Status;
+import com.example.midtermProject.utils.EncryptionUtil;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.Currency;
+
+// TODO - Think if it is a good idea to have a UUID secretKey, maybe not!!!
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Checking extends Account {
-    @Id
-    private Long id;
-    private Money balance;
-    private String secretKey;
-    private AccountHolder primaryOwner;
-    private Optional<AccountHolder> secondaryOwner;
+    @NotBlank
+    private final String secretKey;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "minimum_balance_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "minimum_balance_amount"))
+    })
     private Money minimumBalance;
-    private Money penaltyFee;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "monthly_maintenance_fee_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "monthly_maintenance_fee_amount"))
+    })
     private Money monthlyMaintenanceFee;
-    private LocalDate creationDate;
+    private final LocalDate creationDate;
+    @Enumerated(EnumType.STRING)
+    @NotNull
     private Status status;
+
+    public Checking(){
+        super();
+        this.creationDate = LocalDate.now();
+        setMinimumBalance();
+        setMonthlyMaintenanceFee();
+        setStatus(Status.ACTIVE);
+        this.secretKey = EncryptionUtil.getSecretKey(this);
+    }
+
+    public Checking(Money balance, AccountHolder primaryOwner){
+        super(balance, primaryOwner);
+        this.creationDate = LocalDate.now();
+        setMinimumBalance();
+        setMonthlyMaintenanceFee();
+        setStatus(Status.ACTIVE);
+        this.secretKey = EncryptionUtil.getSecretKey(this);
+    }
+    public Checking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner){
+        super(balance, primaryOwner, secondaryOwner);
+        this.creationDate = LocalDate.now();
+        setMinimumBalance();
+        setMonthlyMaintenanceFee();
+        setStatus(Status.ACTIVE);
+        this.secretKey = EncryptionUtil.getSecretKey(this);
+    }
+
+    public void setMonthlyMaintenanceFee() {
+        this.monthlyMaintenanceFee = new Money(BigDecimal.valueOf(12), Currency.getInstance("EUR"));
+    }
+
+    public void setMonthlyMaintenanceFee(Money monthlyMaintenanceFee) {
+        this.monthlyMaintenanceFee = new Money(monthlyMaintenanceFee.getAmount(), Currency.getInstance("EUR"));
+    }
+
+    public void setMinimumBalance() {
+        this.minimumBalance = new Money(BigDecimal.valueOf(250), Currency.getInstance("EUR"));;
+    }
+
+    public void setMinimumBalance(Money minimumBalance) {
+        this.minimumBalance = new Money(minimumBalance.getAmount(), Currency.getInstance("EUR"));;
+    }
 }
