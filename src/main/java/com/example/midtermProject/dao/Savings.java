@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
@@ -33,12 +35,9 @@ public class Savings extends Account {
     private final LocalDate creationDate;
     @Enumerated(EnumType.STRING)
     private Status status;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "interest_rate_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "interest_rate_amount"))
-    })
-    private Money interestRate;
+    @DecimalMin("0.0")
+    @DecimalMax("0.5")
+    private BigDecimal interestRate;
 
     public Savings(){
         super();
@@ -67,7 +66,7 @@ public class Savings extends Account {
         this.secretKey = EncryptionUtil.getSecretKey(this);
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, Money interestRate, Money minimumBalance){
+    public Savings(Money balance, AccountHolder primaryOwner, BigDecimal interestRate, Money minimumBalance){
         super(balance, primaryOwner);
         setInterestRate(interestRate);
         setMinimumBalance(minimumBalance);
@@ -76,7 +75,7 @@ public class Savings extends Account {
         this.secretKey = EncryptionUtil.getSecretKey(this);
     }
 
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money interestRate, Money minimumBalance){
+    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate, Money minimumBalance){
         super(balance, primaryOwner, secondaryOwner);
         setInterestRate(interestRate);
         setMinimumBalance(minimumBalance);
@@ -94,10 +93,18 @@ public class Savings extends Account {
     }
 
     public void setInterestRate(){
-        this.interestRate = new Money(BigDecimal.valueOf(0.0025), Currency.getInstance("EUR"));
+        this.interestRate =BigDecimal.valueOf(0.0025);
     }
 
-    public void setInterestRate(Money interestRate) {
-        this.interestRate = new Money(interestRate.getAmount().min(BigDecimal.valueOf(0.5)), Currency.getInstance("EUR"));
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate.min(BigDecimal.valueOf(0.5));
+    }
+
+    @Override
+    public void decreaseBalance(Money money) {
+        if (getBalance().getAmount().subtract(money.getAmount()).compareTo(minimumBalance.getAmount()) < 0){
+            money.increaseAmount(getPenaltyFee());
+        }
+        super.decreaseBalance(money);
     }
 }

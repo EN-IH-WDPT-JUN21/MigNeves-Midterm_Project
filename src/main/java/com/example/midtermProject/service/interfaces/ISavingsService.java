@@ -1,9 +1,11 @@
 package com.example.midtermProject.service.interfaces;
 
-import com.example.midtermProject.controller.dto.MoneyDTO;
+import com.example.midtermProject.controller.dto.BalanceDTO;
+import com.example.midtermProject.dao.CreditCard;
+import com.example.midtermProject.dao.Savings;
 
-import java.util.UUID;
 
 public interface ISavingsService {
-    void updateBalance(UUID id, MoneyDTO balance);
+    void updateBalance(Long id, BalanceDTO balance);
+    void createSavings(Savings savings);
 }

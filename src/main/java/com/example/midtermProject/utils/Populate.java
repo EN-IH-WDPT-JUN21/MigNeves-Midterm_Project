@@ -39,21 +39,21 @@ public class Populate {
         CreditCard creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(10000), Currency.getInstance("EUR")),
                 accountHolder1,
                 new Money(BigDecimal.valueOf(300), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.3), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.3));
         CreditCard creditCard2 = new CreditCard(new Money(BigDecimal.valueOf(175), Currency.getInstance("EUR")),
                 accountHolder1,
                 accountHolder2,
                 new Money(BigDecimal.valueOf(90), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.5), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.5));
         creditCardRepository.saveAll(List.of(creditCard1, creditCard2));
         Savings savings1 = new Savings(new Money(BigDecimal.valueOf(999), Currency.getInstance("EUR")),
                 accountHolder1,
-                new Money(BigDecimal.valueOf(0.3), Currency.getInstance("EUR")),
+                BigDecimal.valueOf(0.3),
                 new Money(BigDecimal.valueOf(200), Currency.getInstance("EUR")));
         Savings savings2 = new Savings(new Money(BigDecimal.valueOf(333), Currency.getInstance("EUR")),
                 accountHolder1,
                 accountHolder2,
-                new Money(BigDecimal.valueOf(0.9), Currency.getInstance("EUR")),
+                BigDecimal.valueOf(0.9),
                 new Money(BigDecimal.valueOf(80), Currency.getInstance("EUR")));
         savingsRepository.saveAll(List.of(savings1, savings2));
         StudentChecking studentChecking1 = new StudentChecking(new Money(BigDecimal.valueOf(1100), Currency.getInstance("EUR")), accountHolder1);

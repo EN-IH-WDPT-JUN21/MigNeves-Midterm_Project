@@ -40,12 +40,12 @@ class CreditCardRepositoryTest {
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(10000), Currency.getInstance("EUR")),
                 accountHolder,
                 new Money(BigDecimal.valueOf(300), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.3), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.3));
         creditCard2 = new CreditCard(new Money(BigDecimal.valueOf(175), Currency.getInstance("EUR")),
                 accountHolder,
                 secondaryHolder,
                 new Money(BigDecimal.valueOf(90), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.5), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.5));
         creditCardRepository.saveAll(List.of(creditCard1, creditCard2));
     }
 
@@ -60,7 +60,7 @@ class CreditCardRepositoryTest {
         CreditCard creditCard3 = new CreditCard(new Money(BigDecimal.valueOf(400), Currency.getInstance("EUR")),
                 accountHolder,
                 new Money(BigDecimal.valueOf(200), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.4), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.4));
         int creditCardRepositoryInitialSize = creditCardRepository.findAll().size();
         creditCardRepository.save(creditCard3);
         int creditCardRepositoryFinalSize = creditCardRepository.findAll().size();
@@ -73,7 +73,7 @@ class CreditCardRepositoryTest {
         assertTrue(creditCard.isPresent());
         assertEquals(new Money(BigDecimal.valueOf(175), Currency.getInstance("EUR")).getAmount(), creditCard.get().getBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(90), Currency.getInstance("EUR")).getAmount(), creditCard.get().getCreditLimit().getAmount());
-        assertEquals(new Money(BigDecimal.valueOf(0.5), Currency.getInstance("EUR")).getAmount(), creditCard.get().getInterestRate().getAmount());
+        assertEquals(BigDecimal.valueOf(0.5), creditCard.get().getInterestRate());
         assertEquals("João Neves", creditCard.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", creditCard.get().getPrimaryOwner().getPassword()));
         assertEquals(30, creditCard.get().getPrimaryOwner().getAge());
@@ -96,14 +96,14 @@ class CreditCardRepositoryTest {
         int creditCardRepositoryInitialSize = creditCardRepository.findAll().size();
         assertTrue(creditCard.isPresent());
         creditCard.get().setCreditLimit(new Money(BigDecimal.valueOf(300000), Currency.getInstance("EUR")));
-        creditCard.get().setInterestRate(new Money(BigDecimal.valueOf(0.05), Currency.getInstance("EUR")));
+        creditCard.get().setInterestRate(BigDecimal.valueOf(0.05));
         creditCardRepository.save(creditCard.get());
         int creditCardRepositorySizeAfterUpdate = creditCardRepository.findAll().size();
         creditCard = creditCardRepository.findById(creditCard1.getId());
         assertEquals(creditCardRepositoryInitialSize, creditCardRepositorySizeAfterUpdate);
         assertEquals(new Money(BigDecimal.valueOf(10000), Currency.getInstance("EUR")).getAmount(), creditCard.get().getBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(100000), Currency.getInstance("EUR")).getAmount(), creditCard.get().getCreditLimit().getAmount());
-        assertEquals(new Money(BigDecimal.valueOf(0.1), Currency.getInstance("EUR")).getAmount(), creditCard.get().getInterestRate().getAmount());
+        assertEquals(new Money(BigDecimal.valueOf(0.1), Currency.getInstance("EUR")).getAmount(), creditCard.get().getInterestRate());
         assertEquals("João Neves", creditCard.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", creditCard.get().getPrimaryOwner().getPassword()));
         assertEquals(30, creditCard.get().getPrimaryOwner().getAge());

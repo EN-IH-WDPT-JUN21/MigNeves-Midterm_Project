@@ -18,7 +18,7 @@ import javax.validation.constraints.Digits;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MoneyDTO {
+public class BalanceDTO {
 
     @Embedded
     @AttributeOverrides({
@@ -26,5 +26,5 @@ public class MoneyDTO {
             @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
     })
     @Valid
-    private Money money;
+    private Money balance;
 }

@@ -16,8 +16,6 @@ import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.util.Currency;
 
-// TODO - Think if it is a good idea to have a UUID secretKey, maybe not!!!
-
 @Entity
 @Getter
 @Setter
@@ -81,5 +79,13 @@ public class Checking extends Account {
 
     public void setMinimumBalance(Money minimumBalance) {
         this.minimumBalance = new Money(minimumBalance.getAmount(), Currency.getInstance("EUR"));;
+    }
+
+    @Override
+    public void decreaseBalance(Money money) {
+        if (getBalance().getAmount().subtract(money.getAmount()).compareTo(minimumBalance.getAmount()) < 0){
+            money.increaseAmount(getPenaltyFee());
+        }
+        super.decreaseBalance(money);
     }
 }

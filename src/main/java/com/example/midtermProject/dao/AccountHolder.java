@@ -1,5 +1,7 @@
 package com.example.midtermProject.dao;
 
+import com.example.midtermProject.enums.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -7,6 +9,7 @@ import lombok.Setter;
 import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,8 +20,6 @@ public class AccountHolder extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    private String name;
     @Min(18)
     private int age;
     @Embedded
@@ -38,26 +39,34 @@ public class AccountHolder extends User {
     })
     private Address mailingAddress;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "primaryOwner")
-    private Set<Checking> mainChecking;
+    private List<Checking> mainChecking;
+    @JsonBackReference
     @OneToMany(mappedBy = "primaryOwner")
-    private Set<StudentChecking> mainStudentChecking;
+    private List<StudentChecking> mainStudentChecking;
+    @JsonBackReference
     @OneToMany(mappedBy = "primaryOwner")
-    private Set<Savings> mainSavings;
+    private List<Savings> mainSavings;
+    @JsonBackReference
     @OneToMany(mappedBy = "primaryOwner")
-    private Set<CreditCard> mainCreditCard;
+    private List<CreditCard> mainCreditCard;
 
+    @JsonBackReference
     @OneToMany(mappedBy = "secondaryOwner")
-    private Set<Checking> secondaryChecking;
+    private List<Checking> secondaryChecking;
+    @JsonBackReference
     @OneToMany(mappedBy = "secondaryOwner")
-    private Set<StudentChecking> secondaryStudentChecking;
+    private List<StudentChecking> secondaryStudentChecking;
+    @JsonBackReference
     @OneToMany(mappedBy = "secondaryOwner")
-    private Set<Savings> secondarySavings;
+    private List<Savings> secondarySavings;
+    @JsonBackReference
     @OneToMany(mappedBy = "secondaryOwner")
-    private Set<CreditCard> secondaryCreditCard;
+    private List<CreditCard> secondaryCreditCard;
 
     public AccountHolder( String name, String password, int age, Address primaryAddress){
-        super(password);
+        super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
         setAge(age);
         setPrimaryAddress(primaryAddress);
@@ -65,7 +74,7 @@ public class AccountHolder extends User {
     }
 
     public AccountHolder(String name, String password, int age, Address primaryAddress, Address mailingAddress){
-        super(password);
+        super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
         setAge(age);
         setPrimaryAddress(primaryAddress);

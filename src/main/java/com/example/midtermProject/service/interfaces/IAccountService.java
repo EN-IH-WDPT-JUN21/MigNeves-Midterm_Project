@@ -1,9 +1,9 @@
 package com.example.midtermProject.service.interfaces;
 
-import com.example.midtermProject.controller.dto.MoneyDTO;
+import com.example.midtermProject.controller.dto.BalanceDTO;
 
-import java.util.UUID;
+
 
 public interface IAccountService {
-    void updateBalance(UUID id, MoneyDTO balance);
+    void updateBalance(Long id, BalanceDTO balance);
 }

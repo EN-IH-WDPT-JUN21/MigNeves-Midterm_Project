@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.DecimalMax;
+import javax.validation.constraints.DecimalMin;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
@@ -23,12 +25,8 @@ public class CreditCard extends Account {
             @AttributeOverride(name = "amount", column = @Column(name = "credit_limit_amount"))
     })
     private Money creditLimit;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "interest_rate_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "interest_rate_amount"))
-    })
-    private Money interestRate;
+    @DecimalMin("0.1")
+    private BigDecimal interestRate;
 
     public CreditCard(){
         super();
@@ -38,23 +36,23 @@ public class CreditCard extends Account {
 
     public CreditCard(Money balance, AccountHolder primaryOwner){
         super(balance, primaryOwner);
-        setCreditLimit(new Money(BigDecimal.valueOf(100), Currency.getInstance("EUR")));
-        setInterestRate(new Money(BigDecimal.valueOf(0.2), Currency.getInstance("EUR")));
+        setCreditLimit();
+        setInterestRate();
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner){
         super(balance, primaryOwner, secondaryOwner);
-        setCreditLimit(new Money(BigDecimal.valueOf(100), Currency.getInstance("EUR")));
-        setInterestRate(new Money(BigDecimal.valueOf(0.2), Currency.getInstance("EUR")));
+        setCreditLimit();
+        setInterestRate();
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, Money interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate){
         super(balance, primaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit, Money interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit, BigDecimal interestRate){
         super(balance, primaryOwner, secondaryOwner);
         setCreditLimit(creditLimit);
         setInterestRate(interestRate);
@@ -69,10 +67,10 @@ public class CreditCard extends Account {
     }
 
     public void setInterestRate(){
-        this.interestRate = new Money(BigDecimal.valueOf(0.2), Currency.getInstance("EUR"));
+        this.interestRate = BigDecimal.valueOf(0.2);
     }
 
-    public void setInterestRate(Money interestRate) {
-        this.interestRate = new Money(interestRate.getAmount().max(BigDecimal.valueOf(0.1)), Currency.getInstance("EUR"));
+    public void setInterestRate(BigDecimal interestRate) {
+        this.interestRate = interestRate.max(BigDecimal.valueOf(0.1));
     }
 }

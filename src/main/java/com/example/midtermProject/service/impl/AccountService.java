@@ -1,6 +1,6 @@
 package com.example.midtermProject.service.impl;
 
-import com.example.midtermProject.controller.dto.MoneyDTO;
+import com.example.midtermProject.controller.dto.BalanceDTO;
 import com.example.midtermProject.dao.*;
 import com.example.midtermProject.repository.CheckingRepository;
 import com.example.midtermProject.repository.CreditCardRepository;
@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class AccountService implements IAccountService {
@@ -32,7 +32,7 @@ public class AccountService implements IAccountService {
     CreditCardRepository creditCardRepository;
 
     @Transactional
-    public void updateBalance(UUID id, MoneyDTO balance) {
+    public void updateBalance(Long id, BalanceDTO balance) {
         Optional<Checking> checking = checkingRepository.findById(id);
         Optional<StudentChecking> studentChecking = studentCheckingRepository.findById(id);
         Optional<Savings> savings = savingsRepository.findById(id);
@@ -41,13 +41,13 @@ public class AccountService implements IAccountService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account with id " + id + " not found");
         } else {
             if (checking.isPresent()){
-                checking.get().setBalance(balance.getMoney());
+                checking.get().setBalance(balance.getBalance());
             } else if (studentChecking.isPresent()) {
-                studentChecking.get().setBalance(balance.getMoney());
+                studentChecking.get().setBalance(balance.getBalance());
             } else if (savings.isPresent()) {
-                savings.get().setBalance(balance.getMoney());
+                savings.get().setBalance(balance.getBalance());
             } else {
-                creditCard.get().setBalance(balance.getMoney());
+                creditCard.get().setBalance(balance.getBalance());
             }
         }
     }

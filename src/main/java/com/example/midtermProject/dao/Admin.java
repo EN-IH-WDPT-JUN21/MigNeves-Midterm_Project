@@ -1,5 +1,6 @@
 package com.example.midtermProject.dao;
 
+import com.example.midtermProject.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,11 +19,8 @@ public class Admin extends User{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    private String name;
 
     public Admin(String name, String password){
-        super(password);
-        setName(name);
+        super(name, password, Role.ADMIN);
     }
 }

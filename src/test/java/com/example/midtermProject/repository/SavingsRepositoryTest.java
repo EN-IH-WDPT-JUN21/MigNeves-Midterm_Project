@@ -39,12 +39,12 @@ class SavingsRepositoryTest {
         accountHolderRepository.saveAll(List.of(accountHolder, secondaryHolder));
         savings1 = new Savings(new Money(BigDecimal.valueOf(999), Currency.getInstance("EUR")),
                 accountHolder,
-                new Money(BigDecimal.valueOf(0.3), Currency.getInstance("EUR")),
+                BigDecimal.valueOf(0.3),
                 new Money(BigDecimal.valueOf(200), Currency.getInstance("EUR")));
         savings2 = new Savings(new Money(BigDecimal.valueOf(333), Currency.getInstance("EUR")),
                 accountHolder,
                 secondaryHolder,
-                new Money(BigDecimal.valueOf(0.9), Currency.getInstance("EUR")),
+                BigDecimal.valueOf(0.9),
                 new Money(BigDecimal.valueOf(80), Currency.getInstance("EUR")));
         savingsRepository.saveAll(List.of(savings1, savings2));
     }
@@ -59,8 +59,8 @@ class SavingsRepositoryTest {
     void createSavingsCard_Valid_Created(){
         Savings savings3 = new Savings(new Money(BigDecimal.valueOf(400), Currency.getInstance("EUR")),
                 accountHolder,
-                new Money(BigDecimal.valueOf(200), Currency.getInstance("EUR")),
-                new Money(BigDecimal.valueOf(0.4), Currency.getInstance("EUR")));
+                BigDecimal.valueOf(0.4),
+                new Money(BigDecimal.valueOf(200), Currency.getInstance("EUR")));
         int savingsRepositoryInitialSize = savingsRepository.findAll().size();
         savingsRepository.save(savings3);
         int savingsRepositoryFinalSize = savingsRepository.findAll().size();
@@ -73,7 +73,7 @@ class SavingsRepositoryTest {
         assertTrue(savings.isPresent());
         assertEquals(new Money(BigDecimal.valueOf(333), Currency.getInstance("EUR")).getAmount(), savings.get().getBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(100), Currency.getInstance("EUR")).getAmount(), savings.get().getMinimumBalance().getAmount());
-        assertEquals(new Money(BigDecimal.valueOf(0.5), Currency.getInstance("EUR")).getAmount(), savings.get().getInterestRate().getAmount());
+        assertEquals(BigDecimal.valueOf(0.5), savings.get().getInterestRate());
         assertEquals("João Neves", savings.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", savings.get().getPrimaryOwner().getPassword()));
         assertEquals(30, savings.get().getPrimaryOwner().getAge());
@@ -96,14 +96,14 @@ class SavingsRepositoryTest {
         int creditCardRepositoryInitialSize = savingsRepository.findAll().size();
         assertTrue(savings.isPresent());
         savings.get().setMinimumBalance(new Money(BigDecimal.valueOf(300), Currency.getInstance("EUR")));
-        savings.get().setInterestRate(new Money(BigDecimal.valueOf(0.05), Currency.getInstance("EUR")));
+        savings.get().setInterestRate(BigDecimal.valueOf(0.05));
         savingsRepository.save(savings.get());
         int savingsRepositorySizeAfterUpdate = savingsRepository.findAll().size();
         savings = savingsRepository.findById(savings1.getId());
         assertEquals(creditCardRepositoryInitialSize, savingsRepositorySizeAfterUpdate);
         assertEquals(new Money(BigDecimal.valueOf(999), Currency.getInstance("EUR")).getAmount(), savings.get().getBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(300), Currency.getInstance("EUR")).getAmount(), savings.get().getMinimumBalance().getAmount());
-        assertEquals(new Money(BigDecimal.valueOf(0.05), Currency.getInstance("EUR")).getAmount(), savings.get().getInterestRate().getAmount());
+        assertEquals(BigDecimal.valueOf(0.05), savings.get().getInterestRate());
         assertEquals("João Neves", savings.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", savings.get().getPrimaryOwner().getPassword()));
         assertEquals(30, savings.get().getPrimaryOwner().getAge());
