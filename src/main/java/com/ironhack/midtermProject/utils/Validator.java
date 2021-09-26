@@ -1,9 +1,10 @@
 package com.ironhack.midtermProject.utils;
 
 import com.ironhack.midtermProject.controller.dto.*;
+import com.ironhack.midtermProject.controller.dto.TransactionRequest;
 import com.ironhack.midtermProject.dao.*;
 import com.ironhack.midtermProject.enums.Status;
-import com.ironhack.midtermProject.enums.TransactionType;
+import com.ironhack.midtermProject.enums.ThirdPartyTransactionType;
 import com.ironhack.midtermProject.repository.AccountHolderRepository;
 import com.ironhack.midtermProject.repository.ThirdPartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,12 @@ public class Validator {
     @Autowired
     ThirdPartyRepository thirdPartyRepository;
 
-    private void validateThirdParty(int hashedKey) {
+    private ThirdParty validateThirdParty(int hashedKey) {
         Optional<ThirdParty> thirdParty = thirdPartyRepository.findByHashedKey(hashedKey);
         if (thirdParty.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no ThirdParty Account with a hashed key " + hashedKey);
+        } else {
+            return thirdParty.get();
         }
     }
 
@@ -81,11 +84,16 @@ public class Validator {
     }
 
     public List<Account> validateTransaction(String primaryOwnerName, TransactionRequest transactionRequest){
+
+        if (transactionRequest.getToAccountId().equals(transactionRequest.getFromAccountId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The sending and receiving accounts must not be the same!");
+        }
+
         Account fromAccount;
         Account toAccount;
         try {
-            fromAccount = validateTransferAccount(transactionRequest.getFromId(), primaryOwnerName, true);
-            toAccount = validateTransferAccount(transactionRequest.getToId(), transactionRequest.getToOwnerName(),false);
+            fromAccount = validateTransferAccount(transactionRequest.getFromAccountId(), primaryOwnerName, true);
+            toAccount = validateTransferAccount(transactionRequest.getToAccountId(), transactionRequest.getToOwnerName(),false);
             validateSufficientFunds(fromAccount, transactionRequest.getTransfer());
             validatePositiveAmount(transactionRequest.getTransfer());
         } catch (ResponseStatusException e) {
@@ -93,22 +101,24 @@ public class Validator {
         }
         return List.of(fromAccount, toAccount);
     }
-    public Account validateTransaction(int hashedKey, ThirdPartyTransactionRequest transactionRequest){
+
+    public ThirdPartyTransaction validateTransaction(int hashedKey, ThirdPartyTransactionRequest transactionRequest){
         Account toAccount;
+        ThirdParty thirdParty;
         try {
-            validateThirdParty(hashedKey);
-            toAccount = validateTransferAccount(transactionRequest.getToId(), transactionRequest.getSecretKey());
+            thirdParty = validateThirdParty(hashedKey);
+            toAccount = validateTransferAccount(transactionRequest.getToAccountId(), transactionRequest.getSecretKey());
             validateSufficientFunds(toAccount, transactionRequest.getTransfer());
             validatePositiveAmount(transactionRequest.getTransfer());
             validateTransactionType(transactionRequest.getTransactionType());
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatus(), e.getMessage());
         }
-        return toAccount;
+        return new ThirdPartyTransaction(toAccount, transactionRequest.getTransfer(), transactionRequest.getTransactionType(), thirdParty);
     }
 
-    private void validateTransactionType(TransactionType transactionType) {
-        if (!transactionType.equals(TransactionType.SEND) && !transactionType.equals(TransactionType.RECEIVE)){
+    private void validateTransactionType(ThirdPartyTransactionType transactionType) {
+        if (!transactionType.equals(ThirdPartyTransactionType.SEND) && !transactionType.equals(ThirdPartyTransactionType.RECEIVE)){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "The transaction types are SEND or RECEIVE. Other transaction types are invalid");
         }
     }
@@ -122,7 +132,7 @@ public class Validator {
         }
     }
 
-    public Checking validateChecking(CheckingDTO checkingDTO) {
+    public Checking validateChecking(AccountDTO checkingDTO) {
         List<AccountHolder> listOwners = validateOwners(checkingDTO);
         if (listOwners.size() > 1){
             return new Checking(checkingDTO.getBalance(), listOwners.get(0), listOwners.get(1));
@@ -152,7 +162,7 @@ public class Validator {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Unable to find AccountHolder with id " +
                     (primaryOwner == null ? accountDTO.getPrimaryOwnerId() : accountDTO.getSecondaryOwnerId()));
         }
-        if (secondaryOwner != null){
+        if (secondaryOwner != null && !secondaryOwner.getId().equals(primaryOwner.getId())){
             return List.of(primaryOwner, secondaryOwner);
         } else {
             return List.of(primaryOwner);

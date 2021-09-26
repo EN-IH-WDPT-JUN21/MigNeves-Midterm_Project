@@ -64,10 +64,10 @@ public class Checking extends Account {
     public void decreaseBalance(Money money) {
         if (money != null && money.getAmount() != null){
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
-                if (getBalance().getAmount().subtract(money.getAmount()).compareTo(minimumBalance.getAmount()) < 0){
-                    money.increaseAmount(getPenaltyFee());
-                }
                 super.decreaseBalance(money);
+                if (getBalance().getAmount().compareTo(getMinimumBalance().getAmount()) < 0) {
+                    super.decreaseBalance(getPenaltyFee());
+                }
             }
         }
     }

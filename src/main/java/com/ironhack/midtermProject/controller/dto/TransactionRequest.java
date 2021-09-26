@@ -21,9 +21,9 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class TransactionRequest {
     @NotBlank
-    private String fromId;
+    private String fromAccountId;
     @NotBlank
-    private String toId;
+    private String toAccountId;
     @NotBlank
     private String toOwnerName;
     @AttributeOverrides({
@@ -31,5 +31,6 @@ public class TransactionRequest {
             @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
     })
     @Valid
+    @NotNull
     private Money transfer;
 }

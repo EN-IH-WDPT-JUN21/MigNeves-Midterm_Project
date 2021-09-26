@@ -1,6 +1,7 @@
 package com.ironhack.midtermProject.controller.impl;
 
 import com.ironhack.midtermProject.controller.dto.CreditCardDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateCreditCardReceipt;
 import com.ironhack.midtermProject.controller.interfaces.ICreditCardController;
 import com.ironhack.midtermProject.dao.CreditCard;
 import com.ironhack.midtermProject.queryInterfaces.ICreditCardInformation;
@@ -32,8 +33,8 @@ public class CreditCardController implements ICreditCardController {
 
     @PostMapping("/create/credit_card")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createCreditCard(@RequestBody @Valid CreditCardDTO creditCardBody) {
+    public CreateCreditCardReceipt createCreditCard(@RequestBody @Valid CreditCardDTO creditCardBody) {
         CreditCard creditCard = validator.validateCreditCard(creditCardBody);
-        creditCardService.createCreditCard(creditCard);
+        return creditCardService.createCreditCard(creditCard);
     }
 }

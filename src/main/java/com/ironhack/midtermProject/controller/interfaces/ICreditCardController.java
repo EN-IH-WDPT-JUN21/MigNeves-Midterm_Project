@@ -2,6 +2,7 @@ package com.ironhack.midtermProject.controller.interfaces;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
 import com.ironhack.midtermProject.controller.dto.CreditCardDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateCreditCardReceipt;
 import com.ironhack.midtermProject.dao.CreditCard;
 import com.ironhack.midtermProject.dao.Money;
 import com.ironhack.midtermProject.queryInterfaces.ICreditCardInformation;
@@ -11,5 +12,5 @@ import java.util.List;
 
 
 public interface ICreditCardController {
-    void createCreditCard(CreditCardDTO creditCardBody);
+    CreateCreditCardReceipt createCreditCard(CreditCardDTO creditCardBody);
 }

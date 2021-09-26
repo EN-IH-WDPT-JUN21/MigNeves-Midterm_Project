@@ -6,14 +6,21 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
-    Transaction findTopByFromAccount_IdOrderByTransferDateDesc(String accountId);
 
-    List<Transaction> findByFromAccount_IdOrderByTransferDateDesc(String accountId);
+    @Query("SELECT SUM(t.transfer.amount) FROM Transaction t WHERE t.fromAccount.id = ?1 AND t.transferDate < ?2 GROUP BY t.fromAccount.id, CONVERT(t.transferDate AS DATE)")
+    List<BigDecimal> getHighestDailyTransactionBeforeDate(String id, LocalDateTime localDateTime);
+
+    List<Transaction> findByFromAccount_IdAndTransferDateAfter(String accountId, LocalDateTime localDateTime);
+
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.fromAccount.id =?1")
+    int getCountOfTransactionsFromAccountId(String accountId);
 }

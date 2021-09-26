@@ -1,5 +1,5 @@
 package com.ironhack.midtermProject.enums;
 
-public enum TransactionType {
+public enum ThirdPartyTransactionType {
     RECEIVE, SEND
 }

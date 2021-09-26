@@ -1,6 +1,7 @@
 package com.ironhack.midtermProject.service.impl;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateSavingsReceipt;
 import com.ironhack.midtermProject.dao.Savings;
 import com.ironhack.midtermProject.repository.SavingsRepository;
 import com.ironhack.midtermProject.service.interfaces.ISavingsService;
@@ -28,7 +29,8 @@ public class SavingsService implements ISavingsService {
         }
     }
 
-    public void createSavings(Savings savings){
+    public CreateSavingsReceipt createSavings(Savings savings){
         savingsRepository.save(savings);
+        return new CreateSavingsReceipt(savings);
     }
 }

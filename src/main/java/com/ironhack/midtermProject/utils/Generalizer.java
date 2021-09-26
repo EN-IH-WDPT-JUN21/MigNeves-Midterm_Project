@@ -2,7 +2,6 @@ package com.ironhack.midtermProject.utils;
 
 import com.ironhack.midtermProject.controller.dto.ListOfAccounts;
 import com.ironhack.midtermProject.dao.Account;
-import com.ironhack.midtermProject.dao.AccountHolder;
 import com.ironhack.midtermProject.repository.CheckingRepository;
 import com.ironhack.midtermProject.repository.CreditCardRepository;
 import com.ironhack.midtermProject.repository.SavingsRepository;

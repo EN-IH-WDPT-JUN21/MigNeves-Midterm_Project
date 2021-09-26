@@ -2,6 +2,7 @@ package com.ironhack.midtermProject.controller.impl;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
 import com.ironhack.midtermProject.controller.dto.SavingsDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateSavingsReceipt;
 import com.ironhack.midtermProject.controller.interfaces.ISavingsController;
 import com.ironhack.midtermProject.dao.Account;
 import com.ironhack.midtermProject.dao.Money;
@@ -35,8 +36,8 @@ public class SavingsController implements ISavingsController {
 
     @PostMapping("/create/savings")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createSavings(@RequestBody @Valid SavingsDTO savingsDTO) {
+    public CreateSavingsReceipt createSavings(@RequestBody @Valid SavingsDTO savingsDTO) {
         Savings savings = validator.validateSavings(savingsDTO);
-        savingsService.createSavings(savings);
+        return savingsService.createSavings(savings);
     }
 }

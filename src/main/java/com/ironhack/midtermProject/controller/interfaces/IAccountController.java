@@ -1,15 +1,18 @@
 package com.ironhack.midtermProject.controller.interfaces;
 
 import com.ironhack.midtermProject.controller.dto.*;
-import com.ironhack.midtermProject.dao.Money;
+import com.ironhack.midtermProject.controller.dto.ListOfAccounts;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.ThirdPartyTransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.TransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.TransactionRequest;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PathVariable;
 
 
 public interface IAccountController {
-    Money getAccountBalanceById(String id);
-    void updateBalanceById(String id, BalanceDTO balance);
+    AccountReceipt getAccountBalanceById(String id);
+    AccountReceipt updateBalanceById(String id, BalanceDTO balance);
     TransactionReceipt transferToAccountByOwnerAndId(Authentication authentication, TransactionRequest transactionRequest);
-    void transferThirdParty(int hashedKey, ThirdPartyTransactionRequest transactionRequest);
+    ThirdPartyTransactionReceipt transferThirdParty(int hashedKey, ThirdPartyTransactionRequest transactionRequest);
     ListOfAccounts getAllAccounts(Authentication authentication);
 }

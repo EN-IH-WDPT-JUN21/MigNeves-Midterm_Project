@@ -7,10 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.AttributeOverride;
-import javax.persistence.AttributeOverrides;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
+import javax.persistence.*;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -26,13 +23,7 @@ public class AccountDTO {
     })
     @Valid
     private Money balance;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount"))
-    })
     @NotNull
-    private Status status;
     @NotNull
     private Long primaryOwnerId;
     private Long secondaryOwnerId;

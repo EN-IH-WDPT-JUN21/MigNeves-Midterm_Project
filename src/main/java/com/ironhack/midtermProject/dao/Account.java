@@ -60,12 +60,6 @@ public abstract class Account {
     @NotNull
     private Status status;
     private final LocalDate creationDate;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "highest_daily_transaction_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "highest_daily_transaction_amount"))
-    })
-    private Money highestDailyTransaction;
 
     public Account() {
         this(null, null, null);
@@ -95,8 +89,9 @@ public abstract class Account {
         if (money != null && money.getAmount() != null) {
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
                 getBalance().decreaseAmount(money);
+            } else {
+                throw new IllegalArgumentException("The amount to decrease balance must be positive");
             }
-            getBalance().decreaseAmount(money);
         }
     }
 
@@ -104,21 +99,13 @@ public abstract class Account {
         if (money != null && money.getAmount() != null){
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
                 getBalance().increaseAmount(money);
+            } else {
+                throw new IllegalArgumentException("The amount to decrease balance must be positive");
             }
         }
     }
 
     public boolean hasSufficientFunds(Money transfer){
         return getBalance().getAmount().compareTo(transfer.getAmount()) >= 0;
-    }
-
-    public void setHighestDailyTransaction(Money highestDailyTransaction) {
-        if (highestDailyTransaction != null && highestDailyTransaction.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
-            if (getHighestDailyTransaction() == null) {
-                this.highestDailyTransaction = new Money(highestDailyTransaction.getAmount(), Currency.getInstance("EUR"));
-            } else {
-                this.highestDailyTransaction = new Money(highestDailyTransaction.getAmount().max(getHighestDailyTransaction().getAmount()), Currency.getInstance("EUR"));
-            }
-        }
     }
 }

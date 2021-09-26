@@ -1,6 +1,7 @@
 package com.ironhack.midtermProject.controller.impl;
 
-import com.ironhack.midtermProject.controller.dto.CheckingDTO;
+import com.ironhack.midtermProject.controller.dto.AccountDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
 import com.ironhack.midtermProject.controller.interfaces.ICheckingController;
 import com.ironhack.midtermProject.dao.AccountHolder;
 import com.ironhack.midtermProject.dao.Checking;
@@ -42,12 +43,10 @@ public class CheckingController implements ICheckingController {
 
     @PostMapping("/create/checking")
     @ResponseStatus(HttpStatus.CREATED)
-    public void createChecking(@RequestBody @Valid CheckingDTO checkingBody) {
+    public AccountReceipt createChecking(@RequestBody @Valid AccountDTO checkingBody) {
         Checking checking = validator.validateChecking(checkingBody);
-        checkingService.createChecking(checking);
+        return checkingService.createChecking(checking);
     }
-
-    // TODO - use DTOs instead of entities
 
     @GetMapping("/primary/checking")
     @ResponseStatus(HttpStatus.OK)

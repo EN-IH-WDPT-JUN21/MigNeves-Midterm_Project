@@ -3,12 +3,10 @@ package com.ironhack.midtermProject.dao;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -22,6 +20,9 @@ public class ThirdParty{
     private final int hashedKey;
     @NotBlank
     private String name;
+
+    @OneToMany(mappedBy = "thirdParty")
+    List<ThirdPartyTransaction> transactionList;
 
     public ThirdParty(){
         this.hashedKey = hashCode();

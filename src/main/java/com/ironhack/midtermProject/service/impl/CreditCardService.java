@@ -1,6 +1,7 @@
 package com.ironhack.midtermProject.service.impl;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateCreditCardReceipt;
 import com.ironhack.midtermProject.dao.CreditCard;
 import com.ironhack.midtermProject.repository.CreditCardRepository;
 import com.ironhack.midtermProject.service.interfaces.ICreditCardService;
@@ -28,7 +29,8 @@ public class CreditCardService implements ICreditCardService {
         }
     }
 
-    public void createCreditCard(CreditCard creditCard) {
+    public CreateCreditCardReceipt createCreditCard(CreditCard creditCard) {
         creditCardRepository.save(creditCard);
+        return new CreateCreditCardReceipt(creditCard);
     }
 }

@@ -1,4 +1,4 @@
-package com.ironhack.midtermProject.controller.dto;
+package com.ironhack.midtermProject.controller.dto.receipt;
 
 import com.ironhack.midtermProject.dao.Money;
 import lombok.AllArgsConstructor;

@@ -1,11 +1,14 @@
 package com.ironhack.midtermProject.controller.impl;
 
 import com.ironhack.midtermProject.controller.dto.*;
+import com.ironhack.midtermProject.controller.dto.ListOfAccounts;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.ThirdPartyTransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.TransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.TransactionRequest;
 import com.ironhack.midtermProject.controller.interfaces.IAccountController;
 import com.ironhack.midtermProject.dao.Account;
 import com.ironhack.midtermProject.dao.AccountHolder;
-import com.ironhack.midtermProject.dao.Money;
-import com.ironhack.midtermProject.queryInterfaces.ICheckingInformation;
 import com.ironhack.midtermProject.repository.AccountHolderRepository;
 import com.ironhack.midtermProject.service.interfaces.IAccountService;
 import com.ironhack.midtermProject.utils.Generalizer;
@@ -16,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -34,15 +36,15 @@ public class AccountController implements IAccountController {
 
     @GetMapping("/balance/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public Money getAccountBalanceById(@PathVariable("id") String id) {
+    public AccountReceipt getAccountBalanceById(@PathVariable("id") String id) {
         Account account = generalizer.getAccountFromId(id);
-        return account != null ? account.getBalance() : null;
+        return new AccountReceipt(account);
     }
 
     @PatchMapping("/balance/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void updateBalanceById(@PathVariable("id") String id, @RequestBody @Valid BalanceDTO balance) {
-        accountService.updateBalance(id, balance);
+    public AccountReceipt updateBalanceById(@PathVariable("id") String id, @RequestBody @Valid BalanceDTO balance) {
+        return accountService.updateBalance(id, balance);
     }
 
     @PatchMapping(path = "/transfer")
@@ -52,9 +54,9 @@ public class AccountController implements IAccountController {
     }
 
     @PatchMapping(path = "/transfer/{key}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void transferThirdParty(@PathVariable("key") int hashedKey, ThirdPartyTransactionRequest transactionRequest){
-        accountService.transferMoney(hashedKey, transactionRequest);
+    @ResponseStatus(HttpStatus.OK)
+    public ThirdPartyTransactionReceipt transferThirdParty(@PathVariable("key") int hashedKey, @RequestBody @Valid ThirdPartyTransactionRequest transactionRequest){
+        return accountService.transferMoney(hashedKey, transactionRequest);
     }
 
     @GetMapping("/accounts")

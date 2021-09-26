@@ -43,6 +43,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .mvcMatchers(HttpMethod.POST,"/create/savings").hasAnyRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST,"/create/credit_card").hasAnyRole("ADMIN")
                 .mvcMatchers(HttpMethod.GET,"/accounts").hasAnyRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.GET,"/transfer").hasAnyRole("ACCOUNT_HOLDER")
                 .anyRequest().permitAll();
     }
 }

@@ -1,6 +1,8 @@
 package com.ironhack.midtermProject.service.impl;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.CreateCheckingReceipt;
 import com.ironhack.midtermProject.dao.Checking;
 import com.ironhack.midtermProject.dao.StudentChecking;
 import com.ironhack.midtermProject.repository.CheckingRepository;
@@ -34,12 +36,15 @@ public class CheckingService implements ICheckingService {
         }
     }
 
-    public void createChecking(Checking checking) {
+    public AccountReceipt createChecking(Checking checking) {
         if (checking.getPrimaryOwner().getAge() < 24){
-            StudentChecking studentChecking = new StudentChecking(checking.getBalance(), checking.getPrimaryOwner(), checking.getSecondaryOwner());
+            StudentChecking studentChecking = new StudentChecking(checking.getBalance(), checking.getPrimaryOwner(),
+                    checking.getSecondaryOwner());
             studentCheckingRepository.save(studentChecking);
+            return new AccountReceipt(studentChecking);
         } else {
             checkingRepository.save(checking);
+            return new CreateCheckingReceipt(checking);
         }
     }
 }

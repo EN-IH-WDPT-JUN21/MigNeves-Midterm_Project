@@ -1,7 +1,7 @@
 package com.ironhack.midtermProject.controller.dto;
 
 import com.ironhack.midtermProject.dao.Money;
-import com.ironhack.midtermProject.enums.TransactionType;
+import com.ironhack.midtermProject.enums.ThirdPartyTransactionType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class ThirdPartyTransactionRequest {
     @NotBlank
-    private String toId;
+    private String toAccountId;
     @NotNull
     private String secretKey;
     @AttributeOverrides({
@@ -26,8 +26,9 @@ public class ThirdPartyTransactionRequest {
             @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
     })
     @Valid
+    @NotNull
     private Money transfer;
-    @NotBlank
+    @NotNull
     @Enumerated(EnumType.STRING)
-    TransactionType transactionType;
+    ThirdPartyTransactionType transactionType;
 }

@@ -2,24 +2,24 @@ package com.ironhack.midtermProject.service.impl;
 
 import com.ironhack.midtermProject.controller.dto.BalanceDTO;
 import com.ironhack.midtermProject.controller.dto.ThirdPartyTransactionRequest;
-import com.ironhack.midtermProject.controller.dto.TransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.ThirdPartyTransactionReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.TransactionReceipt;
 import com.ironhack.midtermProject.controller.dto.TransactionRequest;
 import com.ironhack.midtermProject.dao.Account;
-import com.ironhack.midtermProject.dao.Money;
+import com.ironhack.midtermProject.dao.ThirdPartyTransaction;
 import com.ironhack.midtermProject.dao.Transaction;
-import com.ironhack.midtermProject.enums.TransactionType;
+import com.ironhack.midtermProject.enums.ThirdPartyTransactionType;
 import com.ironhack.midtermProject.repository.*;
 import com.ironhack.midtermProject.service.interfaces.IAccountService;
 import com.ironhack.midtermProject.utils.FraudDetector;
 import com.ironhack.midtermProject.utils.Generalizer;
 import com.ironhack.midtermProject.utils.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,6 +28,9 @@ public class AccountService implements IAccountService {
 
     @Autowired
     TransactionRepository transactionRepository;
+
+    @Autowired
+    ThirdPartyTransactionRepository thirdPartyTransactionRepository;
 
     @Autowired
     Generalizer generalizer;
@@ -39,10 +42,11 @@ public class AccountService implements IAccountService {
     FraudDetector fraudDetector;
 
     @Transactional
-    public void updateBalance(String id, BalanceDTO balance) {
+    public AccountReceipt updateBalance(String id, BalanceDTO balance) {
         try {
             Account account = generalizer.getAccountFromId(id);
             account.setBalance(balance.getBalance());
+            return new AccountReceipt(account);
         } catch (ResponseStatusException e){
             throw new ResponseStatusException(e.getStatus(), e.getMessage());
         }
@@ -56,8 +60,7 @@ public class AccountService implements IAccountService {
             Account accountFrom = accountList.get(0);
             Account accountTo = accountList.get(1);
             LocalDateTime currentTransactionDate = LocalDateTime.now();
-            Money dailyTransaction = fraudDetector.catchFraud(currentTransactionDate, accountFrom, transactionRequest.getTransfer());
-            accountFrom.setHighestDailyTransaction(dailyTransaction);
+            fraudDetector.catchFraud(currentTransactionDate, accountFrom, transactionRequest.getTransfer());
             Transaction transaction = new Transaction(accountFrom, accountTo, transactionRequest.getTransfer(), currentTransactionDate);
             transactionRepository.save(transaction);
             accountFrom.decreaseBalance(transactionRequest.getTransfer());
@@ -70,14 +73,16 @@ public class AccountService implements IAccountService {
     }
 
     @Transactional
-    public void transferMoney(int hashedKey, ThirdPartyTransactionRequest transactionRequest){
+    public ThirdPartyTransactionReceipt transferMoney(int hashedKey, ThirdPartyTransactionRequest transactionRequest){
         try {
-            Account account = validator.validateTransaction(hashedKey, transactionRequest);
-            if (transactionRequest.getTransactionType().equals(TransactionType.SEND)){
-                account.increaseBalance(transactionRequest.getTransfer());
+            ThirdPartyTransaction transaction = validator.validateTransaction(hashedKey, transactionRequest);
+            if (transactionRequest.getTransactionType().equals(ThirdPartyTransactionType.SEND)){
+                transaction.getToAccount().increaseBalance(transactionRequest.getTransfer());
             } else {
-                account.decreaseBalance(transactionRequest.getTransfer());
+                transaction.getToAccount().decreaseBalance(transactionRequest.getTransfer());
             }
+            thirdPartyTransactionRepository.save(transaction);
+            return new ThirdPartyTransactionReceipt(transaction);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatus(), e.getMessage());
         }
