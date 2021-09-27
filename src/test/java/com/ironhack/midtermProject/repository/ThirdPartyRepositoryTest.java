@@ -1,11 +1,11 @@
 package com.ironhack.midtermProject.repository;
 
 import com.ironhack.midtermProject.dao.ThirdParty;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +13,19 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)   // Resets DB and id generation (slower)
+@TestPropertySource(properties = {      // For testing it uses a "datalayer_tests" database and the same user
+        "spring.datasource.url=jdbc:mysql://localhost:3306/banking_test",
+        "spring.datasource.username=ironhacker",
+        "spring.datasource.password=1r0nh4ck3r",
+        "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.jpa.defer-datasource-initialization=create-update",
+        "spring.datasource.initialization-mode=always",
+        "spring.jpa.show-sql=true",
+        "server.error.include-message = always"
+})
 class ThirdPartyRepositoryTest {
 
     @Autowired
@@ -34,20 +47,19 @@ class ThirdPartyRepositoryTest {
 
     @AfterEach
     void tearDown() {
-        thirdPartyRepository.deleteAll();
     }
 
     @Test
-    void createThirdParty_Valid_Created(){
+    void createThirdParty_Valid_Created() {
         ThirdParty thirdParty3 = new ThirdParty("Herman");
-        int thirdPartyRepositoryInitialSize = thirdPartyRepository.findAll().size();
+        long thirdPartyRepositoryInitialSize = thirdPartyRepository.count();
         thirdPartyRepository.save(thirdParty3);
-        int thirdPartyRepositoryFinalSize = thirdPartyRepository.findAll().size();
+        long thirdPartyRepositoryFinalSize = thirdPartyRepository.count();
         assertEquals(thirdPartyRepositoryInitialSize + 1, thirdPartyRepositoryFinalSize);
     }
 
     @Test
-    void readThirdParty_Valid_Read(){
+    void readThirdParty_Valid_Read() {
         Optional<ThirdParty> thirdParty = thirdPartyRepository.findById(thirdParty1.getId());
         assertTrue(thirdParty.isPresent());
         assertEquals("Ze Bino", thirdParty.get().getName());
@@ -55,13 +67,13 @@ class ThirdPartyRepositoryTest {
     }
 
     @Test
-    void updateThirdParty_Valid_Updated(){
+    void updateThirdParty_Valid_Updated() {
         Optional<ThirdParty> thirdParty = thirdPartyRepository.findById(thirdParty2.getId());
-        int thirdPartyRepositoryInitialSize = thirdPartyRepository.findAll().size();
+        long thirdPartyRepositoryInitialSize = thirdPartyRepository.count();
         assertTrue(thirdParty.isPresent());
         thirdParty.get().setName("Pedro");
         thirdPartyRepository.save(thirdParty.get());
-        int thirdPartyRepositorySizeAfterUpdate = thirdPartyRepository.findAll().size();
+        long thirdPartyRepositorySizeAfterUpdate = thirdPartyRepository.count();
         thirdParty = thirdPartyRepository.findById(thirdParty2.getId());
         assertEquals("Pedro", thirdParty.get().getName());
         assertEquals(hashedKey2, thirdParty.get().getHashedKey());
@@ -70,13 +82,20 @@ class ThirdPartyRepositoryTest {
     }
 
     @Test
-    void deleteThirdParty_Valid_Deleted(){
-        int thirdPartyRepInitialSize = thirdPartyRepository.findAll().size();
+    void deleteThirdParty_Valid_Deleted() {
+        long thirdPartyRepInitialSize = thirdPartyRepository.count();
         thirdPartyRepository.deleteById(thirdParty1.getId());
-        int thirdPartyRepSizeAfterDelete = thirdPartyRepository.findAll().size();
+        long thirdPartyRepSizeAfterDelete = thirdPartyRepository.count();
         assertEquals(thirdPartyRepInitialSize - 1, thirdPartyRepSizeAfterDelete);
         thirdPartyRepository.deleteById(thirdParty2.getId());
-        int thirdPartyRepFinalSize = thirdPartyRepository.findAll().size();
+        long thirdPartyRepFinalSize = thirdPartyRepository.count();
         assertEquals(thirdPartyRepSizeAfterDelete - 1, thirdPartyRepFinalSize);
+    }
+
+    @Test
+    void findByHashedKey() {
+        Optional<ThirdParty> thirdParty = thirdPartyRepository.findByHashedKey(hashedKey1);
+        assertEquals("Ze Bino", thirdParty.get().getName());
+        assertEquals(hashedKey1, thirdParty.get().getHashedKey());
     }
 }

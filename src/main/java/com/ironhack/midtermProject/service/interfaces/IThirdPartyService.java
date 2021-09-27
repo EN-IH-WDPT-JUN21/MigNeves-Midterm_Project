@@ -1,5 +1,7 @@
 package com.ironhack.midtermProject.service.interfaces;
 
+import com.ironhack.midtermProject.controller.dto.receipt.CreateThirdPartyReceipt;
+
 public interface IThirdPartyService {
-    void createThirdParty(String name);
+    CreateThirdPartyReceipt createThirdParty(String name);
 }

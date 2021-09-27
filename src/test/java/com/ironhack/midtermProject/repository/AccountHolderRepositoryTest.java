@@ -3,19 +3,32 @@ package com.ironhack.midtermProject.repository;
 import com.ironhack.midtermProject.dao.AccountHolder;
 import com.ironhack.midtermProject.dao.Address;
 import com.ironhack.midtermProject.utils.EncryptionUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)   // Resets DB and id generation (slower)
+@TestPropertySource(properties = {      // For testing it uses a "datalayer_tests" database and the same user
+        "spring.datasource.url=jdbc:mysql://localhost:3306/banking_test",
+        "spring.datasource.username=ironhacker",
+        "spring.datasource.password=1r0nh4ck3r",
+        "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.jpa.defer-datasource-initialization=create-update",
+        "spring.datasource.initialization-mode=always",
+        "spring.jpa.show-sql=true",
+        "server.error.include-message = always"
+})
 class AccountHolderRepositoryTest {
 
     @Autowired
@@ -25,27 +38,26 @@ class AccountHolderRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder( "John Adams", "12345", 26, new Address("King Street", "2000-123", "London", "United Kingdom"));
-        accountHolder2 = new AccountHolder("Sofia Alba","abcde",  32, new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
+        accountHolder1 = new AccountHolder("John Adams", "12345", 26, new Address("King Street", "2000-123", "London", "United Kingdom"));
+        accountHolder2 = new AccountHolder("Sofia Alba", "abcde", 32, new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
     }
 
     @AfterEach
     void tearDown() {
-        accountHolderRepository.deleteAll();
     }
 
     @Test
-    void createAccountHolder_Valid_Created(){
-        AccountHolder accountHolder3 = new AccountHolder( "Louis Smith", "mathsIsFun",21, new Address("Prince Street", "ABC-123", "Mexico City", "Mexico"), new Address("Av. de Segovia", "ZZZ-ZZZ", "Valladolid", "Spain"));
-        int accountHolderRepositoryInitialSize = accountHolderRepository.findAll().size();
+    void createAccountHolder_Valid_Created() {
+        AccountHolder accountHolder3 = new AccountHolder("Louis Smith", "mathsIsFun", 21, new Address("Prince Street", "ABC-123", "Mexico City", "Mexico"), new Address("Av. de Segovia", "ZZZ-ZZZ", "Valladolid", "Spain"));
+        long accountHolderRepositoryInitialSize = accountHolderRepository.count();
         accountHolderRepository.save(accountHolder3);
-        int accountHolderRepositoryFinalSize = accountHolderRepository.findAll().size();
+        long accountHolderRepositoryFinalSize = accountHolderRepository.count();
         assertEquals(accountHolderRepositoryInitialSize + 1, accountHolderRepositoryFinalSize);
     }
 
     @Test
-    void readAccountHolder_Valid_Read(){
+    void readAccountHolder_Valid_Read() {
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(accountHolder1.getId());
         assertTrue(accountHolder.isPresent());
         assertEquals("John Adams", accountHolder.get().getName());
@@ -58,13 +70,13 @@ class AccountHolderRepositoryTest {
     }
 
     @Test
-    void updateAccountHolder_Valid_Updated(){
+    void updateAccountHolder_Valid_Updated() {
         Optional<AccountHolder> accountHolder = accountHolderRepository.findById(accountHolder2.getId());
-        int accountRepositoryInitialSize = accountHolderRepository.findAll().size();
+        long accountRepositoryInitialSize = accountHolderRepository.count();
         assertTrue(accountHolder.isPresent());
         accountHolder.get().setMailingAddress(new Address("Rua dos Patos", "3123-123", "Leiria", "Portugal"));
         accountHolderRepository.save(accountHolder.get());
-        int accountRepositorySizeAfterUpdate = accountHolderRepository.findAll().size();
+        long accountRepositorySizeAfterUpdate = accountHolderRepository.count();
         accountHolder = accountHolderRepository.findById(accountHolder2.getId());
         assertEquals(accountRepositoryInitialSize, accountRepositorySizeAfterUpdate);
         assertEquals("Rua dos Patos", accountHolder.get().getMailingAddress().getAddress());
@@ -74,13 +86,13 @@ class AccountHolderRepositoryTest {
     }
 
     @Test
-    void deleteAccountHolder_Valid_Deleted(){
-        int accountHolderRepInitialSize = accountHolderRepository.findAll().size();
+    void deleteAccountHolder_Valid_Deleted() {
+        long accountHolderRepInitialSize = accountHolderRepository.count();
         accountHolderRepository.deleteById(accountHolder1.getId());
-        int accountHolderRepSizeAfterDelete = accountHolderRepository.findAll().size();
+        long accountHolderRepSizeAfterDelete = accountHolderRepository.count();
         assertEquals(accountHolderRepInitialSize - 1, accountHolderRepSizeAfterDelete);
         accountHolderRepository.deleteById(accountHolder2.getId());
-        int accountHolderRepFinalSize = accountHolderRepository.findAll().size();
+        long accountHolderRepFinalSize = accountHolderRepository.count();
         assertEquals(accountHolderRepSizeAfterDelete - 1, accountHolderRepFinalSize);
     }
 }

@@ -1,7 +1,7 @@
 package com.ironhack.midtermProject.dao;
 
-import com.ironhack.midtermProject.enums.Role;
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.ironhack.midtermProject.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -37,33 +37,7 @@ public class AccountHolder extends User {
     })
     private Address mailingAddress;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "primaryOwner")
-    private List<Checking> mainChecking;
-    @JsonBackReference
-    @OneToMany(mappedBy = "primaryOwner")
-    private List<StudentChecking> mainStudentChecking;
-    @JsonBackReference
-    @OneToMany(mappedBy = "primaryOwner")
-    private List<Savings> mainSavings;
-    @JsonBackReference
-    @OneToMany(mappedBy = "primaryOwner")
-    private List<CreditCard> mainCreditCard;
-
-    @JsonBackReference
-    @OneToMany(mappedBy = "secondaryOwner")
-    private List<Checking> secondaryChecking;
-    @JsonBackReference
-    @OneToMany(mappedBy = "secondaryOwner")
-    private List<StudentChecking> secondaryStudentChecking;
-    @JsonBackReference
-    @OneToMany(mappedBy = "secondaryOwner")
-    private List<Savings> secondarySavings;
-    @JsonBackReference
-    @OneToMany(mappedBy = "secondaryOwner")
-    private List<CreditCard> secondaryCreditCard;
-
-    public AccountHolder( String name, String password, int age, Address primaryAddress){
+    public AccountHolder(String name, String password, int age, Address primaryAddress) {
         super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
         setAge(age);
@@ -71,7 +45,7 @@ public class AccountHolder extends User {
         setMailingAddress(null);
     }
 
-    public AccountHolder(String name, String password, int age, Address primaryAddress, Address mailingAddress){
+    public AccountHolder(String name, String password, int age, Address primaryAddress, Address mailingAddress) {
         super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
         setAge(age);

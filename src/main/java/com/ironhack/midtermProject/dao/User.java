@@ -6,7 +6,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
@@ -26,13 +29,13 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public void setPassword(String password) {
-        this.password = EncryptionUtil.encryptedPassword(password);
-    }
-
-    public User(String name, String password, Role role){
+    public User(String name, String password, Role role) {
         setName(name);
         setPassword(password);
         setRole(role);
+    }
+
+    public void setPassword(String password) {
+        this.password = EncryptionUtil.encryptedPassword(password);
     }
 }

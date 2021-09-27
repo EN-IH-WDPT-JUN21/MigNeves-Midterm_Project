@@ -1,6 +1,5 @@
 package com.ironhack.midtermProject.controller.dto;
 
-import com.ironhack.midtermProject.dao.Account;
 import com.ironhack.midtermProject.dao.Money;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +12,6 @@ import javax.persistence.Column;
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 
 @Getter
 @Setter

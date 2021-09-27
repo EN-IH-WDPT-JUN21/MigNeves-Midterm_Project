@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String name) throws UsernameNotFoundException {
         Optional<Admin> admin = adminRepository.findByName(name);
         Optional<AccountHolder> accountHolder = accountHolderRepository.findByName(name);
-        if (admin.isEmpty() && accountHolder.isEmpty()){
+        if (admin.isEmpty() && accountHolder.isEmpty()) {
             throw new UsernameNotFoundException("User not found with username " + name);
         }
         CustomUserDetails customUserDetails = new CustomUserDetails(admin.isPresent() ? admin.get() : accountHolder.get());

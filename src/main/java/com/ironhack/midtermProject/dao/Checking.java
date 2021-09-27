@@ -1,17 +1,13 @@
 package com.ironhack.midtermProject.dao;
 
 import com.ironhack.midtermProject.enums.Status;
-import com.ironhack.midtermProject.utils.EncryptionUtil;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
-
-// TODO - implement interest rate and monthly maintenance fee
 
 @Entity
 @Getter
@@ -35,16 +31,17 @@ public class Checking extends Account {
     private Money monthlyMaintenanceFee;
     private LocalDate lastUpdateDate;
 
-    public Checking(){
+    public Checking() {
         this(null, null, null);
         setLastUpdateDate(getCreationDate());
     }
 
-    public Checking(Money balance, AccountHolder primaryOwner){
+    public Checking(Money balance, AccountHolder primaryOwner) {
         this(balance, primaryOwner, null);
         setLastUpdateDate(getCreationDate());
     }
-    public Checking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner){
+
+    public Checking(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
         super(balance, primaryOwner, secondaryOwner);
         setLastUpdateDate(getCreationDate());
         setMinimumBalance();
@@ -62,7 +59,8 @@ public class Checking extends Account {
 
     @Override
     public void decreaseBalance(Money money) {
-        if (money != null && money.getAmount() != null){
+        // if final amount below minimum balance apply penaltyFee
+        if (money != null && money.getAmount() != null) {
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
                 super.decreaseBalance(money);
                 if (getBalance().getAmount().compareTo(getMinimumBalance().getAmount()) < 0) {

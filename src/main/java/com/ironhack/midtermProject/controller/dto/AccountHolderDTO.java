@@ -1,6 +1,5 @@
 package com.ironhack.midtermProject.controller.dto;
 
-import com.ironhack.midtermProject.dao.Address;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

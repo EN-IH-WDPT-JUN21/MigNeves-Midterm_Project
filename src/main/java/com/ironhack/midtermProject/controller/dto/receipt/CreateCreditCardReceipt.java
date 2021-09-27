@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+//Class to provide feedback when creating a CreditCard Account
 public class CreateCreditCardReceipt extends AccountReceipt {
     private Money creditLimit;
     private BigDecimal interestRate;

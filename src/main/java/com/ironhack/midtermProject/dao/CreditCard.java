@@ -35,43 +35,45 @@ public class CreditCard extends Account {
     private Money creditLimit;
     @DecimalMin("0.1")
     @DecimalMax("0.2")
-    @Column(precision=5, scale=4)
+    @Column(precision = 5, scale = 4)
     private BigDecimal interestRate;
     private LocalDate lastUpdateDate;
 
-    public CreditCard(){
+    // Overloading constructors to allow the creation of a CreditCard with different parameters
+
+    public CreditCard() {
         this(null, null, null, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner){
+    public CreditCard(Money balance, AccountHolder primaryOwner) {
         this(balance, primaryOwner, null, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner){
+    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
         this(balance, primaryOwner, secondaryOwner, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit){
+    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit) {
         this(balance, primaryOwner, null, creditLimit, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit){
+    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit) {
         this(balance, primaryOwner, secondaryOwner, creditLimit, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, BigDecimal interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, BigDecimal interestRate) {
         this(balance, primaryOwner, null, CreditCard.DEFAULT_CREDIT_LIMIT, interestRate);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate) {
         this(balance, primaryOwner, secondaryOwner, CreditCard.DEFAULT_CREDIT_LIMIT, interestRate);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate) {
         this(balance, primaryOwner, null, creditLimit, interestRate);
     }
 
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit, BigDecimal interestRate){
+    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit, BigDecimal interestRate) {
         super(null, primaryOwner, secondaryOwner);
         setLastUpdateDate(getCreationDate());
         setCreditLimit(creditLimit);
@@ -80,7 +82,7 @@ public class CreditCard extends Account {
     }
 
     public void setCreditLimit(Money creditLimit) {
-        if (creditLimit == null){
+        if (creditLimit == null) {
             this.creditLimit = CreditCard.DEFAULT_CREDIT_LIMIT;
         } else {
             this.creditLimit = new Money((creditLimit.getAmount().min(CreditCard.MAX_CREDIT_LIMIT.getAmount()))
@@ -103,7 +105,7 @@ public class CreditCard extends Account {
 
     @Override
     public void setBalance(Money balance) {
-        if (balance != null){
+        if (balance != null) {
             this.balance = new Money(balance.getAmount().max(getCreditLimit().getAmount().negate()), Currency.getInstance("EUR"));
         }
     }

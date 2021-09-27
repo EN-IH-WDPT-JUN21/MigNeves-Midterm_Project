@@ -16,14 +16,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-    @Autowired
-    private CustomUserDetailsService customUserDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -37,13 +36,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.csrf().disable();
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET,"/balance/{id}").hasAnyRole("ADMIN")
-                .mvcMatchers(HttpMethod.PATCH,"/balance/{id}").hasAnyRole("ADMIN")
-                .mvcMatchers(HttpMethod.POST,"/create/checking").hasAnyRole("ADMIN")
-                .mvcMatchers(HttpMethod.POST,"/create/savings").hasAnyRole("ADMIN")
-                .mvcMatchers(HttpMethod.POST,"/create/credit_card").hasAnyRole("ADMIN")
-                .mvcMatchers(HttpMethod.GET,"/accounts").hasAnyRole("ACCOUNT_HOLDER")
-                .mvcMatchers(HttpMethod.GET,"/transfer").hasAnyRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.GET, "/balance/{id}").hasAnyRole("ADMIN")
+                .mvcMatchers(HttpMethod.PATCH, "/balance/{id}").hasAnyRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST, "/create/account").hasAnyRole("ADMIN")
+                .mvcMatchers(HttpMethod.POST, "/create/third_party").hasAnyRole("ADMIN")
+                .mvcMatchers(HttpMethod.GET, "/accounts").hasAnyRole("ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.GET, "/transfer").hasAnyRole("ACCOUNT_HOLDER")
                 .anyRequest().permitAll();
     }
 }

@@ -9,15 +9,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class BankingApplication implements CommandLineRunner {
 
-	@Autowired
-	AccountUpdater accountUpdater;
+    @Autowired
+    AccountUpdater accountUpdater;
 
-	public static void main(String[] args) {
-		SpringApplication.run(BankingApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BankingApplication.class, args);
+    }
 
-	@Override
-	public void run(String... args) {
-		accountUpdater.updateAccounts();
-	}
+    @Override
+    public void run(String... args) {
+        accountUpdater.updateAccounts();
+    }
 }

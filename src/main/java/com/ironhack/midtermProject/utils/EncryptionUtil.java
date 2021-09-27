@@ -7,18 +7,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import java.time.LocalDate;
 
 public class EncryptionUtil {
+
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(15);
     private static final PasswordEncoder secretKeyEncoder = new BCryptPasswordEncoder(13);
 
-    public static String encryptedPassword(String plainPassword){
+    // Method to encrypt password
+    public static String encryptedPassword(String plainPassword) {
         return passwordEncoder.encode(plainPassword);
     }
 
-    public static boolean matches(String plainPassword, String encryptedPassword){
+    // Method to check if password matches with encrypted password
+    public static boolean matches(String plainPassword, String encryptedPassword) {
         return passwordEncoder.matches(plainPassword, encryptedPassword);
     }
 
-    public static String getSecretKey(Account account){
+    // SecretKey creation from Account information
+    public static String getSecretKey(Account account) {
         StringBuilder stringToEncrypt = new StringBuilder();
         if (account.getPrimaryOwner() != null) {
             stringToEncrypt.append(account.getPrimaryOwner().toString());

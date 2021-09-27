@@ -12,25 +12,30 @@ import java.util.Objects;
 @Entity
 @Getter
 @Setter
-public class ThirdParty{
+public class ThirdParty {
+    @NotNull
+    @Column(unique = true)
+    private final int hashedKey;
+    @OneToMany(mappedBy = "thirdParty")
+    List<ThirdPartyTransaction> transactionList;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotNull
-    private final int hashedKey;
     @NotBlank
     private String name;
 
-    @OneToMany(mappedBy = "thirdParty")
-    List<ThirdPartyTransaction> transactionList;
-
-    public ThirdParty(){
+    public ThirdParty() {
         this.hashedKey = hashCode();
     }
 
-    public ThirdParty(String name){
+    public ThirdParty(String name) {
         setName(name);
         this.hashedKey = hashCode();
+    }
+
+    public ThirdParty(String name, int hashedKey) {
+        setName(name);
+        this.hashedKey = hashedKey;
     }
 
     @Override

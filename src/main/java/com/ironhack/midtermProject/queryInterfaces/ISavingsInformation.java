@@ -8,12 +8,20 @@ import java.time.LocalDate;
 
 public interface ISavingsInformation {
     String getId();
+
     Money getBalance();
+
     Money getMinimumBalance();
+
     BigDecimal getInterestRate();
+
     Money getPenaltyFee();
+
     LocalDate getCreationDate();
+
     Status getStatus();
+
     String getPrimaryOwner();
+
     String getSecondaryOwner();
 }

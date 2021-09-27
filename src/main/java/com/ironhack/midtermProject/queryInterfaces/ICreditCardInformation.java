@@ -7,11 +7,18 @@ import java.math.BigDecimal;
 
 public interface ICreditCardInformation {
     String getId();
+
     Money getBalance();
+
     Money getCreditLimit();
+
     BigDecimal getInterestRate();
+
     Money getPenaltyFee();
+
     Status getStatus();
+
     String getPrimaryOwner();
+
     String getSecondaryOwner();
 }

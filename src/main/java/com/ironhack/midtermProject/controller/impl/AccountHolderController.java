@@ -19,6 +19,7 @@ public class AccountHolderController implements IAccountHolderController {
     @Autowired
     IAccountHolderService accountHolderService;
 
+    // Method to allow the creation of a new AccountHolder. Similar to a SignUp. No authentication required
     @PostMapping("/create/user")
     @ResponseStatus(HttpStatus.CREATED)
     public CreateAccountHolderReceipt createAccountHolder(@RequestBody @Valid AccountHolderDTO accountHolderDTO) {

@@ -17,6 +17,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThirdPartyTransactionRequest {
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    ThirdPartyTransactionType transactionType;
     @NotBlank
     private String toAccountId;
     @NotNull
@@ -28,7 +31,4 @@ public class ThirdPartyTransactionRequest {
     @Valid
     @NotNull
     private Money transfer;
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    ThirdPartyTransactionType transactionType;
 }

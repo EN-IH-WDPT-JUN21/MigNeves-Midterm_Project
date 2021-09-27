@@ -1,10 +1,9 @@
 package com.ironhack.midtermProject.dao;
 
 import javax.persistence.Embeddable;
-import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.NotNull;
-import java.math.RoundingMode;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Currency;
 
 @Embeddable
@@ -18,7 +17,7 @@ public class Money {
     @NotNull
     private BigDecimal amount;
 
-    public Money(){
+    public Money() {
         this.currency = USD;
     }
 

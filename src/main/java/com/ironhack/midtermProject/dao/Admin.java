@@ -14,12 +14,12 @@ import javax.persistence.Id;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Admin extends User{
+public class Admin extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public Admin(String name, String password){
+    public Admin(String name, String password) {
         super(name, password, Role.ADMIN);
     }
 }

@@ -14,7 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.Optional;
 
 @Component
-public class Generalizer {
+public class Generalize {
 
     @Autowired
     CheckingRepository checkingRepository;
@@ -28,10 +28,12 @@ public class Generalizer {
     @Autowired
     SavingsRepository savingsRepository;
 
+    // Method to get account from id
+    // Processes the id prefix to search in the correct repository
     public Account getAccountFromId(String id) {
-        String idPrefix = id.substring(0,2);
+        String idPrefix = id.substring(0, 2);
         Optional<? extends Account> account;
-        switch (idPrefix){
+        switch (idPrefix) {
             case "CH":
                 account = checkingRepository.findById(id);
                 break;
@@ -54,6 +56,7 @@ public class Generalizer {
         }
     }
 
+    // get all accounts from user id
     public ListOfAccounts getAllAccounts(Long id) {
         return new ListOfAccounts(
                 savingsRepository.findByPrimaryOwner(id),

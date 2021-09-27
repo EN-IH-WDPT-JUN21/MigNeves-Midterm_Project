@@ -6,20 +6,34 @@ import com.ironhack.midtermProject.dao.Checking;
 import com.ironhack.midtermProject.dao.Money;
 import com.ironhack.midtermProject.enums.Status;
 import com.ironhack.midtermProject.utils.EncryptionUtil;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)   // Resets DB and id generation (slower)
+@TestPropertySource(properties = {      // For testing it uses a "datalayer_tests" database and the same user
+        "spring.datasource.url=jdbc:mysql://localhost:3306/banking_test",
+        "spring.datasource.username=ironhacker",
+        "spring.datasource.password=1r0nh4ck3r",
+        "spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver",
+        "spring.jpa.hibernate.ddl-auto=create-drop",
+        "spring.jpa.defer-datasource-initialization=create-update",
+        "spring.datasource.initialization-mode=always",
+        "spring.jpa.show-sql=true",
+        "server.error.include-message = always"
+})
 class CheckingRepositoryTest {
 
     @Autowired
@@ -30,50 +44,48 @@ class CheckingRepositoryTest {
 
     Checking checking1;
     Checking checking2;
-    AccountHolder accountHolder;
-    AccountHolder secondaryHolder;
+    AccountHolder accountHolder1;
+    AccountHolder accountHolder2;
 
     @BeforeEach
     void setUp() {
-        accountHolder = new AccountHolder("João Neves", "winter1sComing", 30, new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
-        secondaryHolder = new AccountHolder("Unkown", "whoAmI", 90, new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
-        accountHolderRepository.saveAll(List.of(accountHolder, secondaryHolder));
-        checking1 = new Checking(new Money(BigDecimal.valueOf(1100), Currency.getInstance("EUR")), accountHolder);
-        checking2 = new Checking(new Money(BigDecimal.valueOf(2100), Currency.getInstance("EUR")), accountHolder, secondaryHolder);
+        accountHolder1 = new AccountHolder("Kelly", "Ryan", 30, new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
+        accountHolder2 = new AccountHolder("Angela", "whoAmI", 90, new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
+        accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
+        checking1 = new Checking(new Money(BigDecimal.valueOf(1100), Currency.getInstance("EUR")), accountHolder1);
+        checking2 = new Checking(new Money(BigDecimal.valueOf(2100), Currency.getInstance("EUR")), accountHolder1, accountHolder2);
         checkingRepository.saveAll(List.of(checking1, checking2));
     }
 
     @AfterEach
     void tearDown() {
-        checkingRepository.deleteAll();
-        accountHolderRepository.deleteAll();
     }
 
     @Test
-    void createChecking_Valid_Created(){
-        Checking checking3 = new Checking(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR")), secondaryHolder);
-        int checkingRepositoryInitialSize = checkingRepository.findAll().size();
+    void createChecking_Valid_Created() {
+        Checking checking3 = new Checking(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR")), accountHolder2);
+        long checkingRepositoryInitialSize = checkingRepository.count();
         checkingRepository.save(checking3);
-        int checkingRepositoryFinalSize = checkingRepository.findAll().size();
+        long checkingRepositoryFinalSize = checkingRepository.count();
         assertEquals(checkingRepositoryInitialSize + 1, checkingRepositoryFinalSize);
     }
 
     @Test
-    void readChecking_Valid_Read(){
+    void readChecking_Valid_Read() {
         Optional<Checking> checking = checkingRepository.findById(checking2.getId());
         assertTrue(checking.isPresent());
         assertEquals(new Money(BigDecimal.valueOf(2100), Currency.getInstance("EUR")).getAmount(), checking.get().getBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(250), Currency.getInstance("EUR")).getAmount(), checking.get().getMinimumBalance().getAmount());
         assertEquals(new Money(BigDecimal.valueOf(12), Currency.getInstance("EUR")).getAmount(), checking.get().getMonthlyMaintenanceFee().getAmount());
         assertEquals(Status.ACTIVE, checking.get().getStatus());
-        assertEquals("João Neves", checking.get().getPrimaryOwner().getName());
-        assertTrue(EncryptionUtil.matches("winter1sComing", checking.get().getPrimaryOwner().getPassword()));
+        assertEquals("Kelly", checking.get().getPrimaryOwner().getName());
+        assertTrue(EncryptionUtil.matches("Ryan", checking.get().getPrimaryOwner().getPassword()));
         assertEquals(30, checking.get().getPrimaryOwner().getAge());
         assertEquals("Rua das Cerejeiras", checking.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", checking.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", checking.get().getPrimaryOwner().getPrimaryAddress().getCity());
         assertEquals("Portugal", checking.get().getPrimaryOwner().getPrimaryAddress().getCountry());
-        assertEquals("Unkown", checking.get().getSecondaryOwner().getName());
+        assertEquals("Angela", checking.get().getSecondaryOwner().getName());
         assertTrue(EncryptionUtil.matches("whoAmI", checking.get().getSecondaryOwner().getPassword()));
         assertEquals(90, checking.get().getSecondaryOwner().getAge());
         assertEquals("Av. Duarte", checking.get().getSecondaryOwner().getPrimaryAddress().getAddress());
@@ -83,14 +95,14 @@ class CheckingRepositoryTest {
     }
 
     @Test
-    void updateChecking_Valid_Updated(){
+    void updateChecking_Valid_Updated() {
         Optional<Checking> checking = checkingRepository.findById(checking1.getId());
-        int checkingRepositoryInitialSize = checkingRepository.findAll().size();
+        long checkingRepositoryInitialSize = checkingRepository.count();
         assertTrue(checking.isPresent());
         checking.get().setBalance(new Money(BigDecimal.valueOf(30000), Currency.getInstance("EUR")));
-        checking.get().setPrimaryOwner(secondaryHolder);
+        checking.get().setPrimaryOwner(accountHolder2);
         checkingRepository.save(checking.get());
-        int checkingRepositorySizeAfterUpdate = checkingRepository.findAll().size();
+        long checkingRepositorySizeAfterUpdate = checkingRepository.count();
         checking = checkingRepository.findById(checking1.getId());
         assertEquals(checkingRepositoryInitialSize, checkingRepositorySizeAfterUpdate);
         assertEquals(new Money(BigDecimal.valueOf(30000), Currency.getInstance("EUR")).getAmount(), checking.get().getBalance().getAmount());
@@ -102,13 +114,25 @@ class CheckingRepositoryTest {
     }
 
     @Test
-    void deleteChecking_Valid_Deleted(){
-        int checkingRepInitialSize = checkingRepository.findAll().size();
+    void deleteChecking_Valid_Deleted() {
+        long checkingRepInitialSize = checkingRepository.count();
         checkingRepository.deleteById(checking1.getId());
-        int checkingRepSizeAfterDelete = checkingRepository.findAll().size();
+        long checkingRepSizeAfterDelete = checkingRepository.count();
         assertEquals(checkingRepInitialSize - 1, checkingRepSizeAfterDelete);
         checkingRepository.deleteById(checking2.getId());
-        int checkingRepFinalSize = checkingRepository.findAll().size();
+        long checkingRepFinalSize = checkingRepository.count();
         assertEquals(checkingRepSizeAfterDelete - 1, checkingRepFinalSize);
+    }
+
+    @Test
+    void findByPrimaryOwner() {
+        int checkingOwnedByKelly = checkingRepository.findByPrimaryOwner(accountHolder1.getId()).size();
+        assertEquals(2, checkingOwnedByKelly);
+    }
+
+    @Test
+    void findBySecondaryOwner() {
+        int checkingCoOwnedByAngela = checkingRepository.findBySecondaryOwner(accountHolder2.getId()).size();
+        assertEquals(1, checkingCoOwnedByAngela);
     }
 }

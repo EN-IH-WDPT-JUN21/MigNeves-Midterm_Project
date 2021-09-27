@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+//Class to provide feedback when creating a Checking Account
 public class CreateCheckingReceipt extends AccountReceipt {
     private Money monthlyMaintenanceFee;
     private Money minimumBalance;

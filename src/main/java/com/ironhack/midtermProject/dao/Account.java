@@ -1,9 +1,8 @@
 package com.ironhack.midtermProject.dao;
 
-import com.ironhack.midtermProject.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.ironhack.midtermProject.utils.CustomPrefixedIdGenerator;
+import com.ironhack.midtermProject.enums.Status;
 import com.ironhack.midtermProject.utils.EncryptionUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,6 +21,21 @@ import java.util.Currency;
 @Getter
 @Setter
 public abstract class Account {
+    @NotBlank
+    private final String secretKey;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount"))
+    })
+    private final Money penaltyFee = new Money(new BigDecimal(40), Currency.getInstance("EUR"), RoundingMode.HALF_EVEN);
+    private final LocalDate creationDate;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "balance_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
+    })
+    protected Money balance;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
     @GenericGenerator(
@@ -30,27 +44,12 @@ public abstract class Account {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
-    @NotBlank
-    private final String secretKey;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "balance_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
-    })
-    protected Money balance;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount"))
-    })
-    private final Money penaltyFee = new Money(new BigDecimal(40), Currency.getInstance("EUR"), RoundingMode.HALF_EVEN);
     @NotNull(message = "The primary owner is required to create an account!")
     @JsonManagedReference
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne
     @JoinColumn(name = "primary_owner")
     private AccountHolder primaryOwner;
-
     @JsonManagedReference
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
     @ManyToOne
@@ -59,16 +58,16 @@ public abstract class Account {
     @Enumerated(EnumType.STRING)
     @NotNull
     private Status status;
-    private final LocalDate creationDate;
 
     public Account() {
         this(null, null, null);
     }
 
-    public Account(Money balance, AccountHolder primaryOwner){
+    public Account(Money balance, AccountHolder primaryOwner) {
         this(balance, primaryOwner, null);
     }
-    public Account(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner){
+
+    public Account(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
         setBalance(balance);
         setPrimaryOwner(primaryOwner);
         setSecondaryOwner(secondaryOwner);
@@ -78,7 +77,7 @@ public abstract class Account {
     }
 
     public void setBalance(Money balance) {
-        if (balance == null){
+        if (balance == null) {
             this.balance = null;
         } else {
             this.balance = new Money(balance.getAmount().max(BigDecimal.valueOf(0)), Currency.getInstance("EUR"));
@@ -86,6 +85,7 @@ public abstract class Account {
     }
 
     public void decreaseBalance(Money money) {
+        // Subtract amount only if not null and positive
         if (money != null && money.getAmount() != null) {
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
                 getBalance().decreaseAmount(money);
@@ -95,8 +95,9 @@ public abstract class Account {
         }
     }
 
-    public void increaseBalance(Money money){
-        if (money != null && money.getAmount() != null){
+    public void increaseBalance(Money money) {
+        // Add amount only if not null and positive
+        if (money != null && money.getAmount() != null) {
             if (money.getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
                 getBalance().increaseAmount(money);
             } else {
@@ -105,7 +106,7 @@ public abstract class Account {
         }
     }
 
-    public boolean hasSufficientFunds(Money transfer){
+    public boolean hasSufficientFunds(Money transfer) {
         return getBalance().getAmount().compareTo(transfer.getAmount()) >= 0;
     }
 }

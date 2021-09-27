@@ -11,6 +11,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+// Class to provide feedback when creating a AccountHolder
 public class CreateAccountHolderReceipt {
     private Long id;
     private String name;

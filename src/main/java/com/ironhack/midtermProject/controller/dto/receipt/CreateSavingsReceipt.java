@@ -13,6 +13,8 @@ import java.math.BigDecimal;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+
+// Class to provide feedback when creating a Savings Account
 public class CreateSavingsReceipt extends AccountReceipt {
     private BigDecimal interestRate;
     private Money minimumBalance;

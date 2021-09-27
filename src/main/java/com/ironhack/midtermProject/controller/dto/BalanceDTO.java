@@ -11,7 +11,6 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter

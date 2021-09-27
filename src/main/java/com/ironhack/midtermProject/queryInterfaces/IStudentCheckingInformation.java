@@ -7,10 +7,16 @@ import java.time.LocalDate;
 
 public interface IStudentCheckingInformation {
     String getId();
+
     Money getBalance();
+
     Money getPenaltyFee();
+
     LocalDate getCreationDate();
+
     Status getStatus();
+
     String getPrimaryOwner();
+
     String getSecondaryOwner();
 }

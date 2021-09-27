@@ -3,7 +3,7 @@ INSERT IGNORE INTO admin (id, role, name, password) VALUES
 (1, 'ADMIN', 'Admin', '$2a$15$BAE26pJ4sF0IWDNakDEDc.rUlp.LM4Y6XbZ0pKZ4wh.9/xbgQXXAK');
 
 INSERT IGNORE INTO third_party (id, name, hashed_key) VALUES
-(1, 'David Wallace', '-1519330195'),
+(1, 'David Wallace', '1519330195'),
 (2, 'Michael Scott', '1842218853');
 
 --Passwords: 1 - Beesly, 2 - Jimbo, 3 - woof, 4 - beets, 5 - Erin
