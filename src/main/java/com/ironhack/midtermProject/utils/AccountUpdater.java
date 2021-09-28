@@ -1,9 +1,6 @@
 package com.ironhack.midtermProject.utils;
 
-import com.ironhack.midtermProject.dao.Checking;
-import com.ironhack.midtermProject.dao.CreditCard;
-import com.ironhack.midtermProject.dao.Money;
-import com.ironhack.midtermProject.dao.Savings;
+import com.ironhack.midtermProject.dao.*;
 import com.ironhack.midtermProject.repository.CheckingRepository;
 import com.ironhack.midtermProject.repository.CreditCardRepository;
 import com.ironhack.midtermProject.repository.SavingsRepository;
@@ -36,37 +33,57 @@ public class AccountUpdater {
         List<CreditCard> creditCardList = creditCardRepository.findAll();
         List<Checking> checkingList = checkingRepository.findAll();
 
-        int times;
-        LocalDate currentTime = LocalDate.now();
-
         // For each Savings Account calculate number of years to apply interestRate and update balance
         for (Savings savings : savingsList) {
-            times = yearsPassed(savings.getCreationDate(), savings.getLastUpdateDate(), currentTime);
-            BigDecimal interest = applyInterestRateXTimes(new Money(savings.getBalance().getAmount(), savings.getBalance().getCurrency())
-                    , times, savings.getInterestRate());
-            savings.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
-            savings.setLastUpdateDate(currentTime);
+            updateAccount(savings);
         }
 
         // For each CreditCard Account calculate number of months to apply interestRate and update balance
         for (CreditCard creditCard : creditCardList) {
             if (creditCard.getBalance().getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
-                times = monthsPassed(creditCard.getCreationDate(), creditCard.getLastUpdateDate(), currentTime);
-                BigDecimal interest = applyInterestRateXTimes(new Money(creditCard.getBalance().getAmount(),
-                                creditCard.getBalance().getCurrency()), times,
-                        creditCard.getInterestRate().divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN));
-                creditCard.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
+                updateAccount(creditCard);
             }
-            creditCard.setLastUpdateDate(currentTime);
+            creditCard.setLastUpdateDate(LocalDate.now());
         }
 
         // For each Checking Account calculate number of years to apply monthlyMaintenanceFee and update balance
         for (Checking checking : checkingList) {
+            updateAccount(checking);
+        }
+    }
+
+    @Transactional
+    public Account updateAccount(Account account) {
+        LocalDate currentTime = LocalDate.now();
+        int times;
+        if (account.getClass() == Savings.class) {
+            // get number of years since last update and apply interest rate
+            Savings savings = (Savings) account;
+            times = yearsPassed(savings.getCreationDate(), savings.getLastUpdateDate(), currentTime);
+            BigDecimal interest = applyInterestRateXTimes(new Money(savings.getBalance().getAmount(), savings.getBalance().getCurrency())
+                    , times, savings.getInterestRate());
+            savings.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
+            savings.setLastUpdateDate(currentTime);
+            return savings;
+        } else if (account.getClass() == CreditCard.class) {
+            // get number of months since last update and apply interest rate
+            CreditCard creditCard = (CreditCard) account;
+            times = monthsPassed(creditCard.getCreationDate(), creditCard.getLastUpdateDate(), currentTime);
+            BigDecimal interest = applyInterestRateXTimes(new Money(creditCard.getBalance().getAmount(),
+                            creditCard.getBalance().getCurrency()), times,
+                    creditCard.getInterestRate().divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN));
+            creditCard.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
+            return creditCard;
+        } else if (account.getClass() == Checking.class) {
+            // get number of months since last update and apply monthly maintenance fee
+            Checking checking = (Checking) account;
             times = monthsPassed(checking.getCreationDate(), checking.getLastUpdateDate(), currentTime);
             BigDecimal maintenanceFee = checking.getMonthlyMaintenanceFee().getAmount().multiply(BigDecimal.valueOf(times));
             checking.decreaseBalance(new Money(maintenanceFee, Currency.getInstance("EUR")));
             checking.setLastUpdateDate(currentTime);
+            return checking;
         }
+        return account;
     }
 
     private int yearsPassed(LocalDate creationTime, LocalDate lastUpdateTime, LocalDate currentTime) {

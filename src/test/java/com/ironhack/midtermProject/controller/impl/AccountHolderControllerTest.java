@@ -46,6 +46,7 @@ class AccountHolderControllerTest {
 
     @BeforeEach
     public void setUp() {
+        objectMapper.findAndRegisterModules();
         mockMvc = MockMvcBuilders.webAppContextSetup(webApplicationContext).apply(springSecurity()).build();
     }
 

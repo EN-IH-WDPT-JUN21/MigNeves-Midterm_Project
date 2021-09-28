@@ -88,7 +88,7 @@ class CheckingRepositoryTest {
         assertEquals("Portugal", checking.get().getPrimaryOwner().getPrimaryAddress().getCountry());
         assertEquals("Angela", checking.get().getSecondaryOwner().getName());
         assertTrue(EncryptionUtil.matches("whoAmI", checking.get().getSecondaryOwner().getPassword()));
-        assertEquals(90, checking.get().getSecondaryOwner().getBirthDate());
+        assertEquals(LocalDate.of(1921, 12, 21), checking.get().getSecondaryOwner().getBirthDate());
         assertEquals("Av. Duarte", checking.get().getSecondaryOwner().getPrimaryAddress().getAddress());
         assertEquals("ABC", checking.get().getSecondaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Vouzela", checking.get().getSecondaryOwner().getPrimaryAddress().getCity());

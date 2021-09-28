@@ -40,7 +40,7 @@ class AccountHolderRepositoryTest {
     @BeforeEach
     void setUp() {
         accountHolder1 = new AccountHolder("John Adams", "12345", LocalDate.of(1970, 1, 1), new Address("King Street", "2000-123", "London", "United Kingdom"));
-        accountHolder2 = new AccountHolder("Sofia Alba", "abcde", LocalDate.of(1965, 2, 30), new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
+        accountHolder2 = new AccountHolder("Sofia Alba", "abcde", LocalDate.of(1965, 2, 15), new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
     }
 

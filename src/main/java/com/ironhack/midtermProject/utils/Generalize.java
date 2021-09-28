@@ -2,6 +2,7 @@ package com.ironhack.midtermProject.utils;
 
 import com.ironhack.midtermProject.controller.dto.ListOfAccounts;
 import com.ironhack.midtermProject.dao.Account;
+import com.ironhack.midtermProject.dao.StudentChecking;
 import com.ironhack.midtermProject.repository.CheckingRepository;
 import com.ironhack.midtermProject.repository.CreditCardRepository;
 import com.ironhack.midtermProject.repository.SavingsRepository;
@@ -28,6 +29,9 @@ public class Generalize {
     @Autowired
     SavingsRepository savingsRepository;
 
+    @Autowired
+    AccountUpdater accountUpdater;
+
     // Method to get account from id
     // Processes the id prefix to search in the correct repository
     public Account getAccountFromId(String id) {
@@ -52,12 +56,16 @@ public class Generalize {
         if (account.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Account with id " + id + " was not found");
         } else {
+            if (account.get().getClass() != StudentChecking.class) {
+                accountUpdater.updateAccount(account.get());
+            }
             return account.get();
         }
     }
 
     // get all accounts from user id
     public ListOfAccounts getAllAccounts(Long id) {
+        accountUpdater.updateAccounts();
         return new ListOfAccounts(
                 savingsRepository.findByPrimaryOwner(id),
                 creditCardRepository.findByPrimaryOwner(id),

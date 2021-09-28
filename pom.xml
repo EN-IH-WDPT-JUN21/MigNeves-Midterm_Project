@@ -54,6 +54,10 @@
 			<artifactId>spring-security-test</artifactId>
 			<version>4.2.11.RELEASE</version>
 		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-jsr310</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
