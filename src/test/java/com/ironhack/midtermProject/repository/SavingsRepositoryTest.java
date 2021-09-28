@@ -13,6 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,8 @@ class SavingsRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder("Kelly", "winter1sComing", 30, new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
-        accountHolder2 = new AccountHolder("Angela", "whoAmI", 90, new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
+        accountHolder1 = new AccountHolder("Kelly", "winter1sComing", LocalDate.of(1988, 5, 10), new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
+        accountHolder2 = new AccountHolder("Angela", "whoAmI", LocalDate.of(1921, 12, 21), new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
         savings1 = new Savings(new Money(BigDecimal.valueOf(999), Currency.getInstance("EUR")),
                 accountHolder1,
@@ -89,14 +90,14 @@ class SavingsRepositoryTest {
         assertEquals(BigDecimal.valueOf(0.5).setScale(4, RoundingMode.HALF_EVEN), savings.get().getInterestRate());
         assertEquals("Kelly", savings.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", savings.get().getPrimaryOwner().getPassword()));
-        assertEquals(30, savings.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1988, 5, 10), savings.get().getPrimaryOwner().getBirthDate());
         assertEquals("Rua das Cerejeiras", savings.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", savings.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", savings.get().getPrimaryOwner().getPrimaryAddress().getCity());
         assertEquals("Portugal", savings.get().getPrimaryOwner().getPrimaryAddress().getCountry());
         assertEquals("Angela", savings.get().getSecondaryOwner().getName());
         assertTrue(EncryptionUtil.matches("whoAmI", savings.get().getSecondaryOwner().getPassword()));
-        assertEquals(90, savings.get().getSecondaryOwner().getAge());
+        assertEquals(LocalDate.of(1921, 12, 21), savings.get().getSecondaryOwner().getBirthDate());
         assertEquals("Av. Duarte", savings.get().getSecondaryOwner().getPrimaryAddress().getAddress());
         assertEquals("ABC", savings.get().getSecondaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Vouzela", savings.get().getSecondaryOwner().getPrimaryAddress().getCity());
@@ -119,7 +120,7 @@ class SavingsRepositoryTest {
         assertEquals(BigDecimal.valueOf(0.05).setScale(4, RoundingMode.HALF_EVEN), savings.get().getInterestRate());
         assertEquals("Kelly", savings.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", savings.get().getPrimaryOwner().getPassword()));
-        assertEquals(30, savings.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1988, 5, 10), savings.get().getPrimaryOwner().getBirthDate());
         assertEquals("Rua das Cerejeiras", savings.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", savings.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", savings.get().getPrimaryOwner().getPrimaryAddress().getCity());

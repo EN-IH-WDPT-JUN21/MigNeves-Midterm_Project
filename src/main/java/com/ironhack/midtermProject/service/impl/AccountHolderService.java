@@ -34,7 +34,7 @@ public class AccountHolderService implements IAccountHolderService {
             }
             // Create AccountHolder from DTO info and save in the repository
             AccountHolder accountHolder = new AccountHolder(accountHolderDTO.getName(), accountHolderDTO.getPassword(),
-                    accountHolderDTO.getAge(), primaryAddress, mailingAddress);
+                    accountHolderDTO.getBirthDate(), primaryAddress, mailingAddress);
             accountHolderRepository.save(accountHolder);
             // Return receipt of creation
             return new CreateAccountHolderReceipt(accountHolder);

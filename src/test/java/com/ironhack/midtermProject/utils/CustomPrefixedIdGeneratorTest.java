@@ -9,10 +9,11 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Currency;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -59,8 +60,8 @@ class CustomPrefixedIdGeneratorTest {
     void setUp() {
         address = new Address("Some street", "Portland", "UK", "000-111");
         balance = new Money(BigDecimal.valueOf(300), Currency.getInstance("EUR"));
-        accountHolder = new AccountHolder("John", "pass", 29, address);
-        youngAccountHolder = new AccountHolder("Jack", "pass", 22, address);
+        accountHolder = new AccountHolder("John", "pass", LocalDate.of(1980, 1, 20), address);
+        youngAccountHolder = new AccountHolder("Jack", "pass", LocalDate.of(2003, 12, 12), address);
         accountHolderRepository.saveAll(List.of(accountHolder, youngAccountHolder));
         creditCard = new CreditCard(balance, accountHolder);
         creditCardRepository.save(creditCard);
@@ -78,13 +79,13 @@ class CustomPrefixedIdGeneratorTest {
         String savingsId = savings.getId();
         String checkingId = checking.getId();
         String studentCheckingId = studentChecking.getId();
-        assertEquals("CC", creditCardId.substring(0,2));
-        assertEquals(Integer.parseInt(creditCardId.substring(3,creditCardId.length())) + 1, Integer.parseInt(savingsId.substring(3,savingsId.length())));
-        assertEquals("SA", savingsId.substring(0,2));
-        assertEquals(Integer.parseInt(savingsId.substring(3,savingsId.length())) + 1, Integer.parseInt(checkingId.substring(3,checkingId.length())));
-        assertEquals("CH", checkingId.substring(0,2));
-        assertEquals(Integer.parseInt(checkingId.substring(3,checkingId.length())) + 1, Integer.parseInt(studentCheckingId.substring(3,studentCheckingId.length())));
-        assertEquals("SC", studentCheckingId.substring(0,2));
+        assertEquals("CC", creditCardId.substring(0, 2));
+        assertEquals(Integer.parseInt(creditCardId.substring(3)) + 1, Integer.parseInt(savingsId.substring(3)));
+        assertEquals("SA", savingsId.substring(0, 2));
+        assertEquals(Integer.parseInt(savingsId.substring(3)) + 1, Integer.parseInt(checkingId.substring(3)));
+        assertEquals("CH", checkingId.substring(0, 2));
+        assertEquals(Integer.parseInt(checkingId.substring(3)) + 1, Integer.parseInt(studentCheckingId.substring(3)));
+        assertEquals("SC", studentCheckingId.substring(0, 2));
     }
 
     @Test

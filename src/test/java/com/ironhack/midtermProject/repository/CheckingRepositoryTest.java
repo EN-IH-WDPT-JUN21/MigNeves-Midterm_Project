@@ -13,6 +13,7 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,8 @@ class CheckingRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder("Kelly", "Ryan", 30, new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
-        accountHolder2 = new AccountHolder("Angela", "whoAmI", 90, new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
+        accountHolder1 = new AccountHolder("Kelly", "Ryan", LocalDate.of(1988, 5, 10), new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
+        accountHolder2 = new AccountHolder("Angela", "whoAmI", LocalDate.of(1921, 12, 21), new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
         checking1 = new Checking(new Money(BigDecimal.valueOf(1100), Currency.getInstance("EUR")), accountHolder1);
         checking2 = new Checking(new Money(BigDecimal.valueOf(2100), Currency.getInstance("EUR")), accountHolder1, accountHolder2);
@@ -80,14 +81,14 @@ class CheckingRepositoryTest {
         assertEquals(Status.ACTIVE, checking.get().getStatus());
         assertEquals("Kelly", checking.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("Ryan", checking.get().getPrimaryOwner().getPassword()));
-        assertEquals(30, checking.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1988, 5, 10), checking.get().getPrimaryOwner().getBirthDate());
         assertEquals("Rua das Cerejeiras", checking.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", checking.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", checking.get().getPrimaryOwner().getPrimaryAddress().getCity());
         assertEquals("Portugal", checking.get().getPrimaryOwner().getPrimaryAddress().getCountry());
         assertEquals("Angela", checking.get().getSecondaryOwner().getName());
         assertTrue(EncryptionUtil.matches("whoAmI", checking.get().getSecondaryOwner().getPassword()));
-        assertEquals(90, checking.get().getSecondaryOwner().getAge());
+        assertEquals(90, checking.get().getSecondaryOwner().getBirthDate());
         assertEquals("Av. Duarte", checking.get().getSecondaryOwner().getPrimaryAddress().getAddress());
         assertEquals("ABC", checking.get().getSecondaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Vouzela", checking.get().getSecondaryOwner().getPrimaryAddress().getCity());
@@ -106,7 +107,7 @@ class CheckingRepositoryTest {
         checking = checkingRepository.findById(checking1.getId());
         assertEquals(checkingRepositoryInitialSize, checkingRepositorySizeAfterUpdate);
         assertEquals(new Money(BigDecimal.valueOf(30000), Currency.getInstance("EUR")).getAmount(), checking.get().getBalance().getAmount());
-        assertEquals(90, checking.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1921, 12, 21), checking.get().getPrimaryOwner().getBirthDate());
         assertEquals("Av. Duarte", checking.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("ABC", checking.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Vouzela", checking.get().getPrimaryOwner().getPrimaryAddress().getCity());

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -143,7 +144,8 @@ public class AccountService implements IAccountService {
                 creditCardRepository.save(creditCard);
                 return new CreateCreditCardReceipt(creditCard);
             case CHECKING:
-                if (listOwners.get(0).getAge() < 24) {
+                LocalDate localDate = LocalDate.now().minusYears(24);
+                if (listOwners.get(0).getBirthDate().isAfter(localDate)) {
                     StudentChecking studentChecking = new StudentChecking(
                             accountDTO.getBalance(),
                             listOwners.get(0),

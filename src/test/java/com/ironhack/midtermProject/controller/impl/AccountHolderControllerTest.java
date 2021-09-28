@@ -14,6 +14,8 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -53,7 +55,7 @@ class AccountHolderControllerTest {
 
     @Test
     void createAccountHolder() throws Exception {
-        AccountHolderDTO accountHolderDTO = new AccountHolderDTO("Senator", "Oscar", 51, new AddressDTO("street", "city", "country", "1111-111"), null);
+        AccountHolderDTO accountHolderDTO = new AccountHolderDTO("Senator", "Oscar", LocalDate.of(1960, 10, 1), new AddressDTO("street", "city", "country", "1111-111"), null);
         String body = objectMapper.writeValueAsString(accountHolderDTO);
         MvcResult mvcResult = mockMvc.perform(post("/create/user")
                 .content(body).contentType(MediaType.APPLICATION_JSON))

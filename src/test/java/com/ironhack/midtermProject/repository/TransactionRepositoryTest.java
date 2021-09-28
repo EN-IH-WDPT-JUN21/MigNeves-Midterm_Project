@@ -9,6 +9,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Currency;
 import java.util.List;
@@ -55,7 +56,7 @@ class TransactionRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder("John Adams", "12345", 26, new Address("King Street", "2000-123", "London", "United Kingdom"));
+        accountHolder1 = new AccountHolder("John Adams", "12345", LocalDate.of(1990, 10, 12), new Address("King Street", "2000-123", "London", "United Kingdom"));
         accountHolderRepository.save(accountHolder1);
 
         account1 = new CreditCard(new Money(BigDecimal.valueOf(10000), Currency.getInstance("EUR")),

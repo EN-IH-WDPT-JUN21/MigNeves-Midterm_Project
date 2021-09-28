@@ -7,12 +7,12 @@ INSERT IGNORE INTO third_party (id, name, hashed_key) VALUES
 (2, 'Michael Scott', '1842218853');
 
 --Passwords: 1 - Beesly, 2 - Jimbo, 3 - woof, 4 - beets, 5 - Erin
-INSERT IGNORE INTO account_holder (id, name, password, role, age, mailing_address, mailing_address_city, mailing_address_country, mailing_address_postal_code, primary_address, primary_address_city, primary_address_country, primary_address_postal_code) VALUES
-(1, 'Jim Halpert', '$2a$15$chAx7rtvNWrP3Fe4eMr/j.EthVnjatMoCS8AELV8wBjkmWPa77UQW', 'ACCOUNT_HOLDER', 42, 'Some Street', 'Philadelphia', 'USA', '2222-123', 'Another Street', 'Scranton', 'USA', '1234-123'),
-(2, 'Pam Beesly', '$2a$15$DoGoIrXySg3li3v2MYlztu93D6m7Bat3VjADD.PG8pwJd/4BOmALq', 'ACCOUNT_HOLDER', 40, NULL, NULL, NULL, NULL, 'Another Street', 'Scranton', 'USA', '1234-123'),
-(3, 'Ryan Howard', '$2a$15$vDCpA4/HNXfa133VJiAh.epNS9R0woK14cR7vshv48zo5auXm26Wm', 'ACCOUNT_HOLDER', 30, NULL, NULL, NULL , NULL, 'Ryan Castle', 'Scranton', 'USA', '1234-222'),
-(4, 'Dwight Schrute', '$2a$15$uS6ZdXVvKlSQ8pJWok0vu.Fsjd7JgO7cG8GTVMEdNZDK6QqTJDBRq', 'ACCOUNT_HOLDER', 51, 'Mose Street', 'Scranton', 'USA', '1234-123', 'Office', 'Scranton' ,'USA', '1234-444'),
-(5, 'Pete Miller', '$2a$15$AGnScbfibstXsLD8miSid.JCOOw9LsB616D3p8.E2/Mz9QdrpC0sC', 'ACCOUNT_HOLDER', 22, NULL, NULL, NULL, NULL, 'That Street', 'Scranton', 'USA', '1234-999');
+INSERT IGNORE INTO account_holder (id, name, password, role, birth_date, mailing_address, mailing_address_city, mailing_address_country, mailing_address_postal_code, primary_address, primary_address_city, primary_address_country, primary_address_postal_code) VALUES
+(1, 'Jim Halpert', '$2a$15$chAx7rtvNWrP3Fe4eMr/j.EthVnjatMoCS8AELV8wBjkmWPa77UQW', 'ACCOUNT_HOLDER', '1970-10-21', 'Some Street', 'Philadelphia', 'USA', '2222-123', 'Another Street', 'Scranton', 'USA', '1234-123'),
+(2, 'Pam Beesly', '$2a$15$DoGoIrXySg3li3v2MYlztu93D6m7Bat3VjADD.PG8pwJd/4BOmALq', 'ACCOUNT_HOLDER', '1969-1-2', NULL, NULL, NULL, NULL, 'Another Street', 'Scranton', 'USA', '1234-123'),
+(3, 'Ryan Howard', '$2a$15$vDCpA4/HNXfa133VJiAh.epNS9R0woK14cR7vshv48zo5auXm26Wm', 'ACCOUNT_HOLDER', '1985-12-25', NULL, NULL, NULL , NULL, 'Ryan Castle', 'Scranton', 'USA', '1234-222'),
+(4, 'Dwight Schrute', '$2a$15$uS6ZdXVvKlSQ8pJWok0vu.Fsjd7JgO7cG8GTVMEdNZDK6QqTJDBRq', 'ACCOUNT_HOLDER', '1955-5-5', 'Mose Street', 'Scranton', 'USA', '1234-123', 'Office', 'Scranton' ,'USA', '1234-444'),
+(5, 'Pete Miller', '$2a$15$AGnScbfibstXsLD8miSid.JCOOw9LsB616D3p8.E2/Mz9QdrpC0sC', 'ACCOUNT_HOLDER', '2003-6-11', NULL, NULL, NULL, NULL, 'That Street', 'Scranton', 'USA', '1234-999');
 
 INSERT IGNORE INTO credit_card (id, balance_amount, balance_currency, creation_date, penalty_fee_amount, penalty_fee_currency, secret_key, status, primary_owner, secondary_owner, credit_limit_amount, credit_limit_currency, interest_rate, last_update_date) VALUES
 ('CC_1', 1000.00, 'EUR', '2000-01-01', 40.00, 'EUR', '$2a$13$RFqms8bfaoMrCjKx9togCulladxRmx6acQn8xWFQ5jKhT.RNqzdKK', 'ACTIVE', 1, 2, 300.00, 'EUR', 0.20, '2021-01-01'),

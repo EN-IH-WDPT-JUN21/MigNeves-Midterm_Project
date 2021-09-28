@@ -13,6 +13,7 @@ import org.springframework.test.context.TestPropertySource;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.util.Currency;
 import java.util.List;
 import java.util.Optional;
@@ -49,8 +50,8 @@ class CreditCardRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder("Kelly", "winter1sComing", 30, new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
-        accountHolder2 = new AccountHolder("Angela", "whoAmI", 90, new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
+        accountHolder1 = new AccountHolder("Kelly", "winter1sComing", LocalDate.of(1988, 5, 10), new Address("Rua das Cerejeiras", "1234-432", "Viseu", "Portugal"));
+        accountHolder2 = new AccountHolder("Angela", "whoAmI", LocalDate.of(1921, 12, 21), new Address("Av. Duarte", "ABC", "Vouzela", "Portugal"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
         creditCard1 = new CreditCard(new Money(BigDecimal.valueOf(10000), Currency.getInstance("EUR")),
                 accountHolder1,
@@ -89,14 +90,14 @@ class CreditCardRepositoryTest {
         assertEquals(BigDecimal.valueOf(0.2).setScale(4, RoundingMode.HALF_EVEN), creditCard.get().getInterestRate());
         assertEquals("Kelly", creditCard.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", creditCard.get().getPrimaryOwner().getPassword()));
-        assertEquals(30, creditCard.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1988, 5, 10), creditCard.get().getPrimaryOwner().getBirthDate());
         assertEquals("Rua das Cerejeiras", creditCard.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", creditCard.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", creditCard.get().getPrimaryOwner().getPrimaryAddress().getCity());
         assertEquals("Portugal", creditCard.get().getPrimaryOwner().getPrimaryAddress().getCountry());
         assertEquals("Angela", creditCard.get().getSecondaryOwner().getName());
         assertTrue(EncryptionUtil.matches("whoAmI", creditCard.get().getSecondaryOwner().getPassword()));
-        assertEquals(90, creditCard.get().getSecondaryOwner().getAge());
+        assertEquals(LocalDate.of(1921, 12, 21), creditCard.get().getSecondaryOwner().getBirthDate());
         assertEquals("Av. Duarte", creditCard.get().getSecondaryOwner().getPrimaryAddress().getAddress());
         assertEquals("ABC", creditCard.get().getSecondaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Vouzela", creditCard.get().getSecondaryOwner().getPrimaryAddress().getCity());
@@ -119,7 +120,7 @@ class CreditCardRepositoryTest {
         assertEquals(BigDecimal.valueOf(0.1).setScale(4, RoundingMode.HALF_EVEN), creditCard.get().getInterestRate());
         assertEquals("Kelly", creditCard.get().getPrimaryOwner().getName());
         assertTrue(EncryptionUtil.matches("winter1sComing", creditCard.get().getPrimaryOwner().getPassword()));
-        assertEquals(30, creditCard.get().getPrimaryOwner().getAge());
+        assertEquals(LocalDate.of(1988, 5, 10), creditCard.get().getPrimaryOwner().getBirthDate());
         assertEquals("Rua das Cerejeiras", creditCard.get().getPrimaryOwner().getPrimaryAddress().getAddress());
         assertEquals("1234-432", creditCard.get().getPrimaryOwner().getPrimaryAddress().getPostalCode());
         assertEquals("Viseu", creditCard.get().getPrimaryOwner().getPrimaryAddress().getCity());

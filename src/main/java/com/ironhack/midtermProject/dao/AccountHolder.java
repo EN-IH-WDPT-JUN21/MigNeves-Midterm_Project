@@ -1,6 +1,5 @@
 package com.ironhack.midtermProject.dao;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.ironhack.midtermProject.enums.Role;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +7,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import javax.validation.constraints.Min;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Entity
 @Getter
@@ -18,8 +18,8 @@ public class AccountHolder extends User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Min(18)
-    private int age;
+    @NotNull
+    private LocalDate birthDate;
     @Embedded
     @AttributeOverrides({
             @AttributeOverride(name = "address", column = @Column(name = "primary_address")),
@@ -37,18 +37,18 @@ public class AccountHolder extends User {
     })
     private Address mailingAddress;
 
-    public AccountHolder(String name, String password, int age, Address primaryAddress) {
+    public AccountHolder(String name, String password, LocalDate birthDate, Address primaryAddress) {
         super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
-        setAge(age);
+        setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setMailingAddress(null);
     }
 
-    public AccountHolder(String name, String password, int age, Address primaryAddress, Address mailingAddress) {
+    public AccountHolder(String name, String password, LocalDate birthDate, Address primaryAddress, Address mailingAddress) {
         super(name, password, Role.ACCOUNT_HOLDER);
         setName(name);
-        setAge(age);
+        setBirthDate(birthDate);
         setPrimaryAddress(primaryAddress);
         setMailingAddress(mailingAddress);
     }
@@ -56,7 +56,7 @@ public class AccountHolder extends User {
     @Override
     public String toString() {
         return "AccountHolder{" +
-                "age=" + age +
+                "birthDate=" + birthDate +
                 ", primaryAddress=" + primaryAddress +
                 ", mailingAddress=" + mailingAddress +
                 '}';

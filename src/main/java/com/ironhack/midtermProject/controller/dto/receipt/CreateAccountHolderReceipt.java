@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -16,14 +18,14 @@ import lombok.Setter;
 public class CreateAccountHolderReceipt {
     private Long id;
     private String name;
-    private int age;
+    private LocalDate birthDate;
     private Address primaryAddress;
     private Address mailingAddress;
 
     public CreateAccountHolderReceipt(AccountHolder accountHolder) {
         setId(accountHolder.getId());
         setName(accountHolder.getName());
-        setAge(accountHolder.getAge());
+        setBirthDate(accountHolder.getBirthDate());
         setPrimaryAddress(accountHolder.getPrimaryAddress());
         setMailingAddress(accountHolder.getMailingAddress());
     }

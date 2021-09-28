@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestPropertySource;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,8 +39,8 @@ class AccountHolderRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        accountHolder1 = new AccountHolder("John Adams", "12345", 26, new Address("King Street", "2000-123", "London", "United Kingdom"));
-        accountHolder2 = new AccountHolder("Sofia Alba", "abcde", 32, new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
+        accountHolder1 = new AccountHolder("John Adams", "12345", LocalDate.of(1970, 1, 1), new Address("King Street", "2000-123", "London", "United Kingdom"));
+        accountHolder2 = new AccountHolder("Sofia Alba", "abcde", LocalDate.of(1965, 2, 30), new Address("Queen Street", "0011-254", "Dublin", "Ireland"));
         accountHolderRepository.saveAll(List.of(accountHolder1, accountHolder2));
     }
 
@@ -49,7 +50,7 @@ class AccountHolderRepositoryTest {
 
     @Test
     void createAccountHolder_Valid_Created() {
-        AccountHolder accountHolder3 = new AccountHolder("Louis Smith", "mathsIsFun", 21, new Address("Prince Street", "ABC-123", "Mexico City", "Mexico"), new Address("Av. de Segovia", "ZZZ-ZZZ", "Valladolid", "Spain"));
+        AccountHolder accountHolder3 = new AccountHolder("Louis Smith", "mathsIsFun", LocalDate.of(1955, 9, 21), new Address("Prince Street", "ABC-123", "Mexico City", "Mexico"), new Address("Av. de Segovia", "ZZZ-ZZZ", "Valladolid", "Spain"));
         long accountHolderRepositoryInitialSize = accountHolderRepository.count();
         accountHolderRepository.save(accountHolder3);
         long accountHolderRepositoryFinalSize = accountHolderRepository.count();
@@ -62,7 +63,7 @@ class AccountHolderRepositoryTest {
         assertTrue(accountHolder.isPresent());
         assertEquals("John Adams", accountHolder.get().getName());
         Assertions.assertTrue(EncryptionUtil.matches("12345", accountHolder.get().getPassword()));
-        assertEquals(26, accountHolder.get().getAge());
+        assertEquals(LocalDate.of(1970, 1, 1), accountHolder.get().getBirthDate());
         assertEquals("King Street", accountHolder.get().getPrimaryAddress().getAddress());
         assertEquals("2000-123", accountHolder.get().getPrimaryAddress().getPostalCode());
         assertEquals("London", accountHolder.get().getPrimaryAddress().getCity());

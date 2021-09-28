@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -21,8 +21,7 @@ public class AccountHolderDTO {
     @NotBlank
     private String password;
     @NotNull
-    @Min(value = 18)
-    private int age;
+    private LocalDate birthDate;
     @NotNull
     @Valid
     private AddressDTO primaryAddress;
