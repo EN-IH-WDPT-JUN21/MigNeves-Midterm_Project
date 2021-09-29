@@ -2,17 +2,15 @@
 
 ## Table of Contents
 
-1. [**Introduction**](#Introduction)
-    1. [Functions](#Functions)
-2. [**Installation**](#Installation)
+1. [**Installation**](#Installation)
     1. [Setup](#Setup)
-3. [**Users**](#Menu)
+2. [**Users**](#Menu)
     1. [How to navigate the menu](#How-to-navigate-the-menu)
-4. [**Accounts**](#Help-menu)
-5. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
-    1. [Admin Only Requests](#Lead)
-    2. [Account Holder Requests](#Contact)
-    3. [Requests Without Authorization](#SalesRep)
+3. [**Accounts**](#Help-menu)
+4. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
+    1. [Admin Only Requests](#Admin)
+    2. [Account Holder Requests](#AccountHolder)
+    3. [Requests Without Authorization](#ThirdParty)
 
 ## Installation
 
