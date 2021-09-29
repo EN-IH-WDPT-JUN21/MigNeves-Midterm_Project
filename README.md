@@ -103,7 +103,7 @@ Apart from the common account functionalities Credit Card accounts also have:
 
 ### Checking
 
-Apart from the common account functionalities Crhecking accounts also have:
+Apart from the common account functionalities Checking accounts also have:
 - A minimum balance:
     - If the account balance reaches a lower value the penalty fee is applied
 - A monthly maitenance fee applied monthly through the equation:
