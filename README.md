@@ -53,7 +53,7 @@ In this banking application there are three types of Users (Admin, AccountHolder
 
 ### Admin
 
-The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to create new accounts, add third party users and access banking account information as well as change its balance.
+The Admin User is responsible for the creation and management of Third Party users and Banking accounts. When authenticated they have permission to create new accounts, add third party users and access banking account information as well as change its balance.
 The following information about the Admin user is stored in the database:
 - id,
 - name,
