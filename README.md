@@ -49,64 +49,43 @@ properties are defined in each test.
 
 ## Users
 
-In this banking application there are three types of Users (Admin, AccountHolder and ThirdParty), however, ThirdParty User's do not require authentication through the usual username and password.
+This banking application includes three types of Users: Administrator, Account Holder and Third Party.
 
-### Admin
+### Administrator (Admin)
 
-The Admin User is responsible for the creation and management of Third Party users and Banking accounts. When authenticated they have permission to create new accounts, add third party users and access banking account information as well as change its balance.
-The following information about the Admin user is stored in the database:
-- id,
-- name,
-- encrypted password;
+The Admin has the permission to:
+- Create new banking accounts,
+- Change the balance of existing accounts,
+- Access banking accounts information,
+- Add Third Party users.
 
 ### Account Holder
 
-An AccountHolder is a banking client and can own or co-own multiple banking accounts. Through this application the AccountHolder can access his accounts' informations as well as process transactions from one of his accounts to another account.
-The following information about the Account Holder user is stored in the database:
-- id,
-- name,
-- date of birth,
-- primary address,
-    - address,
-    - city,
-    - country,
-    - postal code 
-- (optionally) mailing address,
-    - address,
-    - city,
-    - country,
-    - postal code;
+An Account Holder is a banking client and can own or co-own multiple banking accounts. 
+The Account Holder has the permission to:
+- Access his accounts informations (both owned or co-owned),
+- Do transactions from his accounts.
 
 ### Third Party
 
-A Third Party can only send or receive money from existing accounts by providing his own unique HashedKey.
-The following information about the Third Party user is stored in the database:
-- id,
-- name,
-- hashed key;
+The Third Party has the permission to:
+- Make transactions with banking accounts when providing his own hashed key.
 
 ## Banking Accounts
 
 There are currently 4 diferent types of Banking Accounts, which are Savings, Credit Card, Checking and Student Checking
-All accounts have some common functionalities. They all have a unique identifier that has a prefix, identifying which type of account the id belongs to. They also have a balance, a creation date and a secret key.
-All accounts also have a status identifying if the account is active or frozen. A frozen account can not do transactions to other accounts.
-All accounts have a default penalty fee of 40€, however Student Checking, and Credit Card accounts will never be penalized with this fee.
-All accounts also have a primary owner and can optionally have a secondary owner. The owners are users of the type Account Holder.
-
+All accounts have some common functionalities and properties:
+-  All accounts have a unique identifier with a prefix, identifying which type of account the id belongs to:
+    -  ```CC_#``` for Credit Card accounts,
+    -  ```SA_#``` for Savings accounts,
+    -  ```CH_#``` for Checking accounts,
+    -  ```SC_#``` for Student Checking accounts. They also have a balance, a creation date and a secret key.
+- Accounts can be frozen when a possible fraud is detected,
+- When a account is frozen it can not do any transaction to other accounts,
+- All accounts have a default penalty fee value of 40€,
+- All accounts have a primary owner (Account Holder user) and may have a secondary owner.
 
 ### Savings
-The Savings account has the following properties:
-- id (SA_#),
-- balance,
-- creation date,
-- secret key,
-- penalty fee,
-- primary owner,
-- (optional) secondary owner,
-- status,
-- minimum balance,
-- interest rate,
-- last update date;
 
 Apart from the common account functionalities Savings accounts have a minimum balance, an interest rate and a last update date. Every year the interest rate is applied to the balance's account through the following equation:
 ```
