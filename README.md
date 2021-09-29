@@ -459,7 +459,7 @@ After the request the a response will be received with the Account Holder inform
 
 ## Class Diagram
 
-![class diagram](Class Diagram.png)
+![class diagram](Class Diagram.svg)
 
 
 ## The Team
