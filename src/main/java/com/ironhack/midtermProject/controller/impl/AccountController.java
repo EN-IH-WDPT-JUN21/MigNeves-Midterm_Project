@@ -38,7 +38,7 @@ public class AccountController implements IAccountController {
 
     // Method for an Admin or AccountHolder to access the balance of an Account by id (other information apart from balance are provided)
     // If the user is an AccountHolder validate if the owner owns the Account
-    @GetMapping("/balance/{id}")
+    @GetMapping("/account/{id}")
     @ResponseStatus(HttpStatus.OK)
     public AccountReceipt getAccountBalanceById(Authentication authentication, @PathVariable("id") String id) {
         Account account;
@@ -47,7 +47,7 @@ public class AccountController implements IAccountController {
         } else {
             account = generalizer.getAccountFromId(id);
         }
-        return new AccountReceipt(account);
+        return generalizer.getAccountReceipt(account);
     }
 
     // Method to allow an Admin to change the balance of an Account by id. A balance value out of range defaults to the minimum
@@ -76,14 +76,11 @@ public class AccountController implements IAccountController {
     @GetMapping("/accounts")
     @ResponseStatus(HttpStatus.OK)
     public ListOfAccounts getAllAccounts(Authentication authentication) {
-        if (authentication.isAuthenticated()) {
-            Optional<AccountHolder> accountHolder = accountHolderRepository.findByName(authentication.getName());
-            if (accountHolder.isEmpty()) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no Account Owner named " + authentication.getName());
-            }
-            return generalizer.getAllAccounts(accountHolder.get().getId());
+        Optional<AccountHolder> accountHolder = accountHolderRepository.findByName(authentication.getName());
+        if (accountHolder.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "There is no Account Owner named " + authentication.getName());
         }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        return generalizer.getAllAccounts(accountHolder.get().getId());
     }
 
     // Method to allow an Admin to create an Account

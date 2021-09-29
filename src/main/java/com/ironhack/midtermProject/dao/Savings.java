@@ -39,33 +39,12 @@ public class Savings extends Account {
     private BigDecimal interestRate;
     private LocalDate lastUpdateDate;
 
-    // Overloading constructors to allow the creation of a Saving account with different parameters
     public Savings() {
         this(null, null, null, Savings.DEFAULT_INTEREST_RATE, Savings.DEFAULT_MINIMUM_BALANCE);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner) {
         this(balance, primaryOwner, null, Savings.DEFAULT_INTEREST_RATE, Savings.DEFAULT_MINIMUM_BALANCE);
-    }
-
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
-        this(balance, primaryOwner, secondaryOwner, Savings.DEFAULT_INTEREST_RATE, Savings.DEFAULT_MINIMUM_BALANCE);
-    }
-
-    public Savings(Money balance, AccountHolder primaryOwner, BigDecimal interestRate) {
-        this(balance, primaryOwner, null, interestRate, Savings.DEFAULT_MINIMUM_BALANCE);
-    }
-
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate) {
-        this(balance, primaryOwner, secondaryOwner, interestRate, Savings.DEFAULT_MINIMUM_BALANCE);
-    }
-
-    public Savings(Money balance, AccountHolder primaryOwner, Money minimumBalance) {
-        this(balance, primaryOwner, null, Savings.DEFAULT_INTEREST_RATE, minimumBalance);
-    }
-
-    public Savings(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money minimumBalance) {
-        this(balance, primaryOwner, secondaryOwner, Savings.DEFAULT_INTEREST_RATE, minimumBalance);
     }
 
     public Savings(Money balance, AccountHolder primaryOwner, BigDecimal interestRate, Money minimumBalance) {

@@ -68,5 +68,32 @@ class AccountHolderControllerTest {
         assertTrue(mvcResult.getResponse().getContentAsString().contains("city"));
         assertTrue(mvcResult.getResponse().getContentAsString().contains("country"));
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1111-111"));
+
+        accountHolderDTO = new AccountHolderDTO("Senator Jr.", "Oscar", LocalDate.of(1960, 10, 1), new AddressDTO("street", "city", "country", "1111-111"), new AddressDTO("street2", "city2", "country2", "2222-222"));
+        body = objectMapper.writeValueAsString(accountHolderDTO);
+        mvcResult = mockMvc.perform(post("/create/user")
+                .content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isCreated()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("6"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Senator"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("street"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("city"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("country"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("1111-111"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Senator Jr."));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("street2"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("city2"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("country2"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("2222-222"));
+    }
+
+    @Test
+    void createAccountHolder_DuplicateName_Error() throws Exception {
+        AccountHolderDTO accountHolderDTO = new AccountHolderDTO("Jim Halpert", "Oscar", LocalDate.of(1960, 10, 1), new AddressDTO("street", "city", "country", "1111-111"), null);
+        String body = objectMapper.writeValueAsString(accountHolderDTO);
+        MvcResult mvcResult = mockMvc.perform(post("/create/user")
+                .content(body).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isForbidden()).andReturn();
     }
 }

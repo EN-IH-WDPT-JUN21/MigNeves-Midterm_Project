@@ -59,7 +59,7 @@ public class AccountService implements IAccountService {
         try {
             Account account = generalizer.getAccountFromId(id);
             account.setBalance(balance.getBalance());
-            return new AccountReceipt(account);
+            return generalizer.getAccountReceipt(account);
         } catch (ResponseStatusException e) {
             throw new ResponseStatusException(e.getStatus(), e.getMessage());
         }
@@ -133,7 +133,7 @@ public class AccountService implements IAccountService {
                         accountDTO.getInterestRate(),
                         accountDTO.getMinimumBalance());
                 savingsRepository.save(savings);
-                return new CreateSavingsReceipt(savings);
+                return new SavingsReceipt(savings);
             case CREDIT_CARD:
                 CreditCard creditCard = new CreditCard(
                         accountDTO.getBalance(),
@@ -142,7 +142,7 @@ public class AccountService implements IAccountService {
                         accountDTO.getCreditLimit(),
                         accountDTO.getInterestRate());
                 creditCardRepository.save(creditCard);
-                return new CreateCreditCardReceipt(creditCard);
+                return new CreditCardReceipt(creditCard);
             case CHECKING:
                 LocalDate localDate = LocalDate.now().minusYears(24);
                 if (listOwners.get(0).getBirthDate().isAfter(localDate)) {
@@ -158,7 +158,7 @@ public class AccountService implements IAccountService {
                             listOwners.get(0),
                             listOwners.get(1));
                     checkingRepository.save(checking);
-                    return new CreateCheckingReceipt(checking);
+                    return new CheckingReceipt(checking);
                 }
             default:
                 throw new IllegalArgumentException("There is no AccountType " + accountDTO.getAccountType().toString());

@@ -40,9 +40,7 @@ public class AccountUpdater {
 
         // For each CreditCard Account calculate number of months to apply interestRate and update balance
         for (CreditCard creditCard : creditCardList) {
-            if (creditCard.getBalance().getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
-                updateAccount(creditCard);
-            }
+            updateAccount(creditCard);
             creditCard.setLastUpdateDate(LocalDate.now());
         }
 
@@ -68,11 +66,13 @@ public class AccountUpdater {
         } else if (account.getClass() == CreditCard.class) {
             // get number of months since last update and apply interest rate
             CreditCard creditCard = (CreditCard) account;
-            times = monthsPassed(creditCard.getCreationDate(), creditCard.getLastUpdateDate(), currentTime);
-            BigDecimal interest = applyInterestRateXTimes(new Money(creditCard.getBalance().getAmount(),
-                            creditCard.getBalance().getCurrency()), times,
-                    creditCard.getInterestRate().divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN));
-            creditCard.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
+            if (creditCard.getBalance().getAmount().compareTo(BigDecimal.valueOf(0)) >= 0) {
+                times = monthsPassed(creditCard.getCreationDate(), creditCard.getLastUpdateDate(), currentTime);
+                BigDecimal interest = applyInterestRateXTimes(new Money(creditCard.getBalance().getAmount(),
+                                creditCard.getBalance().getCurrency()), times,
+                        creditCard.getInterestRate().divide(BigDecimal.valueOf(12), RoundingMode.HALF_EVEN));
+                creditCard.increaseBalance(new Money(interest, Currency.getInstance("EUR")));
+            }
             return creditCard;
         } else if (account.getClass() == Checking.class) {
             // get number of months since last update and apply monthly maintenance fee

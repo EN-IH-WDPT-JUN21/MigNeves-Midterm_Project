@@ -1,19 +1,16 @@
 package com.ironhack.midtermProject.controller.dto.receipt;
 
 import com.ironhack.midtermProject.dao.Account;
+import com.ironhack.midtermProject.dao.CreditCard;
 import com.ironhack.midtermProject.dao.Money;
 import com.ironhack.midtermProject.enums.Status;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 
 //Class to provide feedback when creating an Account or when checking an Account's balance
 public class AccountReceipt {

@@ -1,8 +1,11 @@
 package com.ironhack.midtermProject.utils;
 
 import com.ironhack.midtermProject.controller.dto.ListOfAccounts;
-import com.ironhack.midtermProject.dao.Account;
-import com.ironhack.midtermProject.dao.StudentChecking;
+import com.ironhack.midtermProject.controller.dto.receipt.AccountReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.CheckingReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.CreditCardReceipt;
+import com.ironhack.midtermProject.controller.dto.receipt.SavingsReceipt;
+import com.ironhack.midtermProject.dao.*;
 import com.ironhack.midtermProject.repository.CheckingRepository;
 import com.ironhack.midtermProject.repository.CreditCardRepository;
 import com.ironhack.midtermProject.repository.SavingsRepository;
@@ -86,5 +89,16 @@ public class Generalize {
                 checkingRepository.findBySecondaryOwner(id),
                 studentCheckingRepository.findBySecondaryOwner(id)
         );
+    }
+
+    public AccountReceipt getAccountReceipt(Account account) {
+        if (account.getClass() == CreditCard.class) {
+            return new CreditCardReceipt((CreditCard) account);
+        } else if (account.getClass() == Checking.class) {
+            return new CheckingReceipt((Checking) account);
+        } else if (account.getClass() == Savings.class) {
+            return new SavingsReceipt((Savings) account);
+        }
+        return new AccountReceipt(account);
     }
 }

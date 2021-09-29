@@ -6,14 +6,10 @@ import com.ironhack.midtermProject.queryInterfaces.ISavingsInformation;
 import com.ironhack.midtermProject.queryInterfaces.IStudentCheckingInformation;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.util.List;
 
 @Getter
-@Setter
-@NoArgsConstructor
 @AllArgsConstructor
 public class ListOfAccounts {
     List<ISavingsInformation> primarySavingsAccounts;

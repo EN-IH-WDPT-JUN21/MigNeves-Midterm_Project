@@ -39,34 +39,12 @@ public class CreditCard extends Account {
     private BigDecimal interestRate;
     private LocalDate lastUpdateDate;
 
-    // Overloading constructors to allow the creation of a CreditCard with different parameters
-
     public CreditCard() {
         this(null, null, null, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner) {
         this(balance, primaryOwner, null, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
-    }
-
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner) {
-        this(balance, primaryOwner, secondaryOwner, CreditCard.DEFAULT_CREDIT_LIMIT, CreditCard.DEFAULT_INTEREST_RATE);
-    }
-
-    public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit) {
-        this(balance, primaryOwner, null, creditLimit, CreditCard.DEFAULT_INTEREST_RATE);
-    }
-
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, Money creditLimit) {
-        this(balance, primaryOwner, secondaryOwner, creditLimit, CreditCard.DEFAULT_INTEREST_RATE);
-    }
-
-    public CreditCard(Money balance, AccountHolder primaryOwner, BigDecimal interestRate) {
-        this(balance, primaryOwner, null, CreditCard.DEFAULT_CREDIT_LIMIT, interestRate);
-    }
-
-    public CreditCard(Money balance, AccountHolder primaryOwner, AccountHolder secondaryOwner, BigDecimal interestRate) {
-        this(balance, primaryOwner, secondaryOwner, CreditCard.DEFAULT_CREDIT_LIMIT, interestRate);
     }
 
     public CreditCard(Money balance, AccountHolder primaryOwner, Money creditLimit, BigDecimal interestRate) {

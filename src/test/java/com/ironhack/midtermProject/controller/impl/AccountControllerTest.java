@@ -62,8 +62,8 @@ class AccountControllerTest {
     }
 
     @Test
-    void getAccountBalanceById() throws Exception {
-        MvcResult mvcResult = mockMvc.perform(get("/balance/CC_1").with(httpBasic("Admin", "admin"))).andExpect(status().isOk()).andReturn();
+    void getAccountBalanceById_ValidAdmin_AccountReturned() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/account/CC_1").with(httpBasic("Admin", "admin"))).andExpect(status().isOk()).andReturn();
 
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1141.68"));
         assertTrue(mvcResult.getResponse().getContentAsString().contains("2000-01-01"));
@@ -74,10 +74,64 @@ class AccountControllerTest {
     }
 
     @Test
-    void updateBalanceById() throws Exception {
+    void getAccountBalanceById_ValidAccountHolder_AccountReturned() throws Exception {
+        MvcResult mvcResult = mockMvc.perform(get("/account/CC_1").with(httpBasic("Jim Halpert", "Beesly"))).andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("1141.68"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("2000-01-01"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("ACTIVE"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("40.00"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Jim Halpert"));
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("Pam Beesly"));
+    }
+
+    @Test
+    void getAccountBalanceById_InvalidAccountHolder_Exception() throws Exception {
+        mockMvc.perform(get("/account/CC_2").with(httpBasic("Jim Halpert", "Beesly"))).andExpect(status().isForbidden()).andReturn();
+    }
+
+
+    @Test
+    void updateBalanceById_CreditCard() throws Exception {
         String body = objectMapper.writeValueAsString(new BalanceDTO(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR"))));
 
         MvcResult mvcResult = mockMvc.perform(patch("/balance/CC_1").with(httpBasic("Admin", "admin"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("500.00"));
+    }
+
+    @Test
+    void updateBalanceById_Savings() throws Exception {
+        String body = objectMapper.writeValueAsString(new BalanceDTO(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR"))));
+
+        MvcResult mvcResult = mockMvc.perform(patch("/balance/SA_3").with(httpBasic("Admin", "admin"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("500.00"));
+    }
+
+    @Test
+    void updateBalanceById_Checking() throws Exception {
+        String body = objectMapper.writeValueAsString(new BalanceDTO(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR"))));
+
+        MvcResult mvcResult = mockMvc.perform(patch("/balance/CH_4").with(httpBasic("Admin", "admin"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("500.00"));
+    }
+
+    @Test
+    void updateBalanceById_StudentChecking() throws Exception {
+        String body = objectMapper.writeValueAsString(new BalanceDTO(new Money(BigDecimal.valueOf(500), Currency.getInstance("EUR"))));
+
+        MvcResult mvcResult = mockMvc.perform(patch("/balance/SC_5").with(httpBasic("Admin", "admin"))
                 .content(body)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
@@ -96,6 +150,40 @@ class AccountControllerTest {
                 .andExpect(status().isOk()).andReturn();
 
         assertTrue(mvcResult.getResponse().getContentAsString().contains("1140.68"));
+    }
+
+    @Test
+    void transferToAccountByOwnerAndId_MinimumBalancePenalty() throws Exception {
+        TransactionRequest transactionRequest = new TransactionRequest("CH_4", "CC_2",
+                "Ryan Howard", new Money(BigDecimal.valueOf(600), Currency.getInstance("EUR")));
+        String body = objectMapper.writeValueAsString(transactionRequest);
+        MvcResult mvcResult = mockMvc.perform(patch("/transfer").with(httpBasic("Pam Beesly", "Jimbo"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("148.00"));
+
+        transactionRequest = new TransactionRequest("SA_3", "CC_2",
+                "Ryan Howard", new Money(BigDecimal.valueOf(600), Currency.getInstance("EUR")));
+        body = objectMapper.writeValueAsString(transactionRequest);
+        mvcResult = mockMvc.perform(patch("/transfer").with(httpBasic("Dwight Schrute", "beets"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk()).andReturn();
+
+        assertTrue(mvcResult.getResponse().getContentAsString().contains("60.00"));
+    }
+
+    @Test
+    void transferToAccountByOwnerAndId_NegativeAmount_Exception() throws Exception {
+        TransactionRequest transactionRequest = new TransactionRequest("CC_1", "CC_2",
+                "Ryan Howard", new Money(BigDecimal.valueOf(-20), Currency.getInstance("EUR")));
+        String body = objectMapper.writeValueAsString(transactionRequest);
+        MvcResult mvcResult = mockMvc.perform(patch("/transfer").with(httpBasic("Jim Halpert", "Beesly"))
+                .content(body)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest()).andReturn();
     }
 
     @Test

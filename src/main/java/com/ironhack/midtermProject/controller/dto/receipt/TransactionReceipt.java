@@ -2,15 +2,11 @@ package com.ironhack.midtermProject.controller.dto.receipt;
 
 import com.ironhack.midtermProject.dao.Money;
 import com.ironhack.midtermProject.dao.Transaction;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
-@NoArgsConstructor
-@AllArgsConstructor
 
 // Class to provide feedback when doing a Transaction
 public class TransactionReceipt {

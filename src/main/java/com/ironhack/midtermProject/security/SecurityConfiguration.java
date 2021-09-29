@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http.httpBasic();
         http.csrf().disable();
         http.authorizeRequests()
-                .mvcMatchers(HttpMethod.GET, "/balance/{id}").hasAnyRole("ADMIN", "ACCOUNT_HOLDER")
+                .mvcMatchers(HttpMethod.GET, "/account/{id}").hasAnyRole("ADMIN", "ACCOUNT_HOLDER")
                 .mvcMatchers(HttpMethod.PATCH, "/balance/{id}").hasAnyRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST, "/create/account").hasAnyRole("ADMIN")
                 .mvcMatchers(HttpMethod.POST, "/create/third_party").hasAnyRole("ADMIN")

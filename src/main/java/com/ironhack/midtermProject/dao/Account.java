@@ -21,21 +21,6 @@ import java.util.Currency;
 @Getter
 @Setter
 public abstract class Account {
-    @NotBlank
-    private final String secretKey;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount"))
-    })
-    private final Money penaltyFee = new Money(new BigDecimal(40), Currency.getInstance("EUR"), RoundingMode.HALF_EVEN);
-    private final LocalDate creationDate;
-    @Embedded
-    @AttributeOverrides({
-            @AttributeOverride(name = "currency", column = @Column(name = "balance_currency")),
-            @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
-    })
-    protected Money balance;
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
     @GenericGenerator(
@@ -44,6 +29,21 @@ public abstract class Account {
     )
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "balance_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "balance_amount"))
+    })
+    protected Money balance;
+    private final LocalDate creationDate;
+    @NotBlank
+    private final String secretKey;
+    @Embedded
+    @AttributeOverrides({
+            @AttributeOverride(name = "currency", column = @Column(name = "penalty_fee_currency")),
+            @AttributeOverride(name = "amount", column = @Column(name = "penalty_fee_amount"))
+    })
+    private final Money penaltyFee = new Money(new BigDecimal(40), Currency.getInstance("EUR"), RoundingMode.HALF_EVEN);
     @NotNull(message = "The primary owner is required to create an account!")
     @JsonManagedReference
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
