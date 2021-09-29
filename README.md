@@ -3,15 +3,9 @@
 ## Table of Contents
 
 1. [**Installation**](#Installation)
-    1. [Setup](#Setup)
 2. [**Users**](#Menu)
-    1. [How to navigate the menu](#How-to-navigate-the-menu)
 3. [**Accounts**](#Help-menu)
 4. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
-    1. [Admin Allowed Requests](#AdminRequests)
-    2. [Account Holder Allowed Requests](#AccountHolderRequests)
-    3. [Third Party Allowed Requests](#ThirdPartyRequests)
-    4. [Not Authenticated Requests](#NotAuthenticated)
 
 ## Installation
 
