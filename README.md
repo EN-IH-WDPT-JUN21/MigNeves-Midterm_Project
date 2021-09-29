@@ -455,11 +455,11 @@ After the request the a response will be received with the Account Holder inform
 
 ## Use Case Diagram
 
-![Use Case Diagram](https://user-images.githubusercontent.com/66126956/133005492-c50e2d46-3ceb-482f-8f9d-9accfb914a5d.png)
+![use case diagram](UseCaseDiagram.png)
 
 ## Class Diagram
 
-![use case diagram](UseCaseDiagram.png)
+![class diagram](Class Diagram.png)
 
 
 ## The Team
