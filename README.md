@@ -78,7 +78,7 @@ All accounts have some common functionalities and properties:
     -  ```CC_#``` for Credit Card accounts,
     -  ```SA_#``` for Savings accounts,
     -  ```CH_#``` for Checking accounts,
-    -  ```SC_#``` for Student Checking accounts. They also have a balance, a creation date and a secret key.
+    -  ```SC_#``` for Student Checking accounts.
 - Accounts can be frozen when a possible fraud is detected,
 - When a account is frozen it can not do any transaction to other accounts,
 - All accounts have a default penalty fee value of 40€,
