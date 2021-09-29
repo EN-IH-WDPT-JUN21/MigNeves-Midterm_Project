@@ -459,7 +459,7 @@ After the request the a response will be received with the Account Holder inform
 
 ## Class Diagram
 
-![use case diagram](https://user-images.githubusercontent.com/66126956/133005493-d86adb38-76d9-4151-8355-6e1dfa7322cd.png)
+![use case diagram](UseCaseDiagram.png)
 
 
 ## The Team
