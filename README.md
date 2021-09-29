@@ -3,9 +3,12 @@
 ## Table of Contents
 
 1. [**Installation**](#Installation)
-2. [**Users**](#Menu)
-3. [**Accounts**](#Help-menu)
-4. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
+2. [**Users**](#Users)  
+    1. [**Administrator**](#Administrator-(admin))
+    2. [**Account Holder**](#Account-holder)
+    3. [**Third Party**](#Third-party)
+4. [**Accounts**](#Help-menu)
+5. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
 
 ## Installation
 
