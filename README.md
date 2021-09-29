@@ -498,7 +498,7 @@ To create a new Account Holder the following information must be provided:
     - country: Country of the address,
     - postalCode: Postal code of the address.
  - mailingAddress (optional): User's mailing address 
- - 
+
 Example of a request body:
 ```
 {
