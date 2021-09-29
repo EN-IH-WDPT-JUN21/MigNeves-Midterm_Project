@@ -320,7 +320,79 @@ Alternatively the Account Holder can get the information of all his accounts by 
 After the request the Account Holder user will receive a response with all his accounts informations such as:
 
 ```
-
+{
+    "primarySavingsAccounts": [],
+    "primaryCreditCardAccounts": [
+        {
+            "id": "CC_1",
+            "balance": {
+                "currency": "EUR",
+                "amount": 332.25
+            },
+            "status": "ACTIVE",
+            "interestRate": 0.2000,
+            "creditLimit": {
+                "currency": "EUR",
+                "amount": 300.00
+            },
+            "secondaryOwner": "Pam Beesly",
+            "primaryOwner": "Jim Halpert",
+            "penaltyFee": {
+                "currency": "EUR",
+                "amount": 40.00
+            }
+        },
+        {
+            "id": "CC_6",
+            "balance": {
+                "currency": "EUR",
+                "amount": 300.00
+            },
+            "status": "ACTIVE",
+            "interestRate": 0.1500,
+            "creditLimit": {
+                "currency": "EUR",
+                "amount": 100.00
+            },
+            "secondaryOwner": "Pam Beesly",
+            "primaryOwner": "Jim Halpert",
+            "penaltyFee": {
+                "currency": "EUR",
+                "amount": 40.00
+            }
+        }
+    ],
+    "primaryCheckingAccounts": [],
+    "primaryStudentCheckingAccounts": [],
+    "secondarySavingsAccounts": [],
+    "secondaryCreditCardAccounts": [],
+    "secondaryCheckingAccounts": [
+        {
+            "id": "CH_4",
+            "balance": {
+                "currency": "EUR",
+                "amount": 776.00
+            },
+            "monthlyMaintenanceFee": {
+                "currency": "EUR",
+                "amount": 12.00
+            },
+            "status": "ACTIVE",
+            "minimumBalance": {
+                "currency": "EUR",
+                "amount": 250.00
+            },
+            "creationDate": "2019-12-30",
+            "secondaryOwner": "Jim Halpert",
+            "primaryOwner": "Pam Beesly",
+            "penaltyFee": {
+                "currency": "EUR",
+                "amount": 40.00
+            }
+        }
+    ],
+    "secondaryStudentCheckingAccounts": []
+}
 ```
 #### Make a Transaction from a Owned Account to Another Account
 
