@@ -131,7 +131,7 @@ After the request the Admin user will receive a response such as:
     "id": "CC_1",
     "balance": {
         "currency": "EUR",
-        "amount": 1488.09
+        "amount": -300.00
     },
     "penaltyFee": {
         "currency": "EUR",
@@ -158,9 +158,12 @@ To change the balance of a particular account the Admin user may do a **patch** 
 ```
 The Admin user must also provide the new balance in euros (€) through the request body in the following example:
 ```
+{
     "balance": {
         "amount": 300.00
     }
+}    
+
 ```
 
 After the request the Admin user will receive a response with the updated balance value such as:
@@ -215,7 +218,8 @@ The Admin user must also provide the new account information through the request
 
 Example of a request body:
 ```
-    "accountType": "Credit Card",
+{
+    "accountType": "CREDIT_CARD",
     "balance": {
         "amount": 300.00
     },
@@ -225,12 +229,13 @@ Example of a request body:
         "amount": 50.00
     },
     "interestRate": 0.15
+}    
 ```
 
 After the request the Admin user will receive a response with the created account information such as:
 ```
 {
-    "id": "CC_3",
+    "id": "CC_6",
     "balance": {
         "currency": "EUR",
         "amount": 300.00
@@ -239,7 +244,7 @@ After the request the Admin user will receive a response with the created accoun
         "currency": "EUR",
         "amount": 40.00
     },
-    "creationDate": "2000-09-29",
+    "creationDate": "2021-09-29",
     "status": "ACTIVE",
     "primaryOwnerName": "Jim Halpert",
     "secondaryOwnerName": "Pam Beesly",
@@ -247,7 +252,7 @@ After the request the Admin user will receive a response with the created accoun
         "currency": "EUR",
         "amount": 100.00
     },
-    "interestRate": 0.1500
+    "interestRate": 0.15
 }
 ```
 
@@ -260,14 +265,16 @@ The Admin user must also provide the new Third Party user name through the reque
 
 Example of a request body:
 ```
+{
     "name": "Kelly Kapoor"
+}    
 ```
 
 After the request the Admin user will receive a response with the created Third Party information such as:
 ```
 {
-    "id": 3,
-    "name": Kelly Kapoor"
+    "id": 5,
+    "name": "Kelly Kapoor"
 }
 ```
 For security reasons the hashed key is not provided in the response
@@ -287,7 +294,7 @@ After the request the Account Holder user will receive a response such as:
     "id": "CC_1",
     "balance": {
         "currency": "EUR",
-        "amount": 1488.09
+        "amount": 342.50
     },
     "penaltyFee": {
         "currency": "EUR",
@@ -330,21 +337,23 @@ The Account Holder must also provide the following information through the reque
 
 Example of a request body:
 ```
+{
     "fromAccountId": "CC_1",
     "toAccountId": "CC_2",
     "toOwnerName": "Ryan Howard",
     "transfer": {
         "amount": 100.00
     }
+}    
 ```
 
 After the request the Account Holder user will receive a response with a transaction receipt such as:
 ```
 {
-    "transactionId": 5,
+    "transactionId": 7,
     "finalBalance": {
-        "amount": 350.00,
-        "currency": "EUR"
+        "currency": "EUR",
+        "amount": 291.02
     },
     "fromAccountId": "CC_1",
     "toAccountId": "CC_2"
@@ -376,22 +385,26 @@ The Third Party user must also provide the following information through the req
 
 Example of a request body:
 ```
+{
     "transactionType": "SEND",
     "toAccountId": "CC_2",
-    "secretKey": "Ryan Howard",
+    "secretKey": "$2a$13$GxKif5Y0hdyJ/LYfDV4uueqI3qrkTKcOp2jUYLXCYYuxS.Om8V64a",
     "transfer": {
         "amount": 100.00
     }
+}   
 ```
 
 After the request the Third Party user will receive a response with a transaction receipt such as:
 ```
 {
-    "id": 5,
+    "id": 1,
     "transfer": {
+        "currency": "EUR",
         "amount": 100.00
     },
-    "thirdPartyName": "",
+    "thirdPartyName": "Michael Scott",
+    "toAccountId": "CC_2",
     "transactionType": "SEND"
 }
 ```
@@ -415,23 +428,32 @@ To create a new Account Holder the following information must be provided:
  - 
 Example of a request body:
 ```
-    "transactionType": "SEND",
-    "toAccountId": "CC_2",
-    "secretKey": "Ryan Howard",
-    "transfer": {
-        "amount": 100.00
+{
+    "name": "John",
+    "password": "password",
+    "birthDate": "1997-02-11",
+    "primaryAddress": {
+        "address": "Street A",
+        "city": "Lisbon",
+        "country": "Portugal",
+        "postalCode": "1111-111"
     }
+}   
 ```
 
 After the request the a response will be received with the Account Holder information such as:
 ```
 {
-    "id": 5,
-    "transfer": {
-        "amount": 100.00
+    "id": 6,
+    "name": "John",
+    "birthDate": "1997-02-11",
+    "primaryAddress": {
+        "address": "Street A",
+        "postalCode": "Lisbon",
+        "city": "Portugal",
+        "country": "1111-111"
     },
-    "thirdPartyName": "",
-    "transactionType": "SEND"
+    "mailingAddress": null
 }
 ```
 
@@ -444,10 +466,6 @@ After the request the a response will be received with the Account Holder inform
 
 ![use case diagram](https://user-images.githubusercontent.com/66126956/133005493-d86adb38-76d9-4151-8355-6e1dfa7322cd.png)
 
-
-## Notes
-
-- Some tests, from PrinterTest, will not pass in Ubuntu or Mac machines due to the different type of linebreak.
 
 ## The Team
 
