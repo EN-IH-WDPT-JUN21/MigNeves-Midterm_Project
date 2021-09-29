@@ -54,21 +54,93 @@ In this banking application there are three types of Users (Admin, AccountHolder
 ### Admin
 
 The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to create new accounts, add third party users and access banking account information as well as change its balance.
-The Admin's have stored in the database:
-```
-id
-name
-encrypted password
-```
+The following information about the Admin user is stored in the database:
+- id,
+- name,
+- encrypted password;
 
 ### Account Holder
 
 An AccountHolder is a banking client and can own or co-own multiple banking accounts. Through this application the AccountHolder can access his accounts' informations as well as process transactions from one of his accounts to another account.
+The following information about the Account Holder user is stored in the database:
+- id,
+- name,
+- date of birth,
+- primary address,
+    - address,
+    - city,
+    - country,
+    - postal code 
+- (optionally) mailing address,
+    - address,
+    - city,
+    - country,
+    - postal code;
 
 ### Third Party
 
-A ThirdParty can only send or receive money from existing accounts by providing his own unique HashedKey. 
+A Third Party can only send or receive money from existing accounts by providing his own unique HashedKey.
+The following information about the Third Party user is stored in the database:
+- id,
+- name,
+- hashed key;
 
+## Banking Accounts
+
+There are currently 4 diferent types of Banking Accounts, which are Savings, Credit Card, Checking and Student Checking
+
+### Savings
+The Savings account has the following properties:
+- id,
+- balance,
+- creation date,
+- secret key,
+- penalty fee,
+- primary owner,
+- (optional) secondary owner,
+- status,
+- minimum balance,
+- interest rate,
+- last update date;
+
+### Credit Card
+The Savings account has the following properties:
+- id,
+- balance,
+- creation date,
+- secret key,
+- penalty fee,
+- primary owner,
+- (optional) secondary owner,
+- status,
+- credit limit,
+- interest rate,
+- last update date;
+
+### Checking
+The Savings account has the following properties:
+- id,
+- balance,
+- creation date,
+- secret key,
+- penalty fee,
+- primary owner,
+- (optional) secondary owner,
+- status,
+- minimum balance,
+- montly maintenance fee,
+- last update date;
+
+### Student Checking
+The Savings account has the following properties:
+- id,
+- balance,
+- creation date,
+- secret key,
+- penalty fee,
+- primary owner,
+- (optional) secondary owner,
+- status;
 
 ## Use Case Diagram
 
