@@ -18,8 +18,8 @@
     3. [**Third Party Allowed Requests**](#Third-party-allowed-requests)
     4. [**Not Authenticated Requests**](#Not-authenticated-requests)
 5. [**Diagrams**](#Diagrams)
-    1.[**Use Case Diagram**](#Use-case-diagram)
-    2.[**Class Diagram**](#Class-diagram) 
+    1. [**Use Case Diagram**](#Use-case-diagram)
+    2. [**Class Diagram**](#Class-diagram) 
 
 ## Installation
 
