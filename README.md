@@ -72,7 +72,7 @@ The Third Party has the permission to:
 
 ## Banking Accounts
 
-There are currently 4 diferent types of Banking Accounts, which are Savings, Credit Card, Checking and Student Checking
+There are currently 4 diferent types of Banking Accounts, which are Savings, Credit Card, Checking and Student Checking.
 All accounts have some common functionalities and properties:
 -  All accounts have a unique identifier with a prefix, identifying which type of account the id belongs to:
     -  ```CC_#``` for Credit Card accounts,
