@@ -55,11 +55,11 @@ In this banking application there are three types of Users (Admin, AccountHolder
 
 The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to access banking account information as well as change the balance.
 
-## AccountHolder
+### AccountHolder
 
 An AccountHolder is a banking client and can own or co-own multiple banking accounts. Through this application the AccountHolder can access his accounts' informations as well as process transactions from one of his accounts to another account.
 
-## ThirdParty
+### ThirdParty
 
 A ThirdParty can only send or receive money from existing accounts by providing his own unique HashedKey. 
 
