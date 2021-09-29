@@ -47,6 +47,21 @@ To run the application:
 It is also possible to change the properties in the application.properties file to a custom user and database. However, the tests
 properties are defined in each test.
 
+## Users
+
+In this banking application there are three types of Users (Admin, AccountHolder and ThirdParty), however, ThirdParty User's do not need to authenticate through the common username and password method.
+
+### Admin
+
+The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to access banking account information as well as change the balance.
+
+## AccountHolder
+
+An AccountHolder is a banking client and can own or co-own multiple banking accounts. Through this application the AccountHolder can access his accounts' informations as well as process transactions from one of his accounts to another account.
+
+## ThirdParty
+
+A ThirdParty can only send or receive money from existing accounts by providing his own unique HashedKey. 
 
 
 ## Use Case Diagram
