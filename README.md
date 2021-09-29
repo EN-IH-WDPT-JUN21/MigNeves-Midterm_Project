@@ -403,7 +403,7 @@ After the request the Third Party user will receive a response with a transactio
 }
 ```
 
-## Not Authenticated Requests
+### Not Authenticated Requests
 
 To create a new Account Holder user a **post** request may be done through the route:
 ```/create/user```
