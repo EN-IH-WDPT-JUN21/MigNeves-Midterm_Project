@@ -439,7 +439,7 @@ After the request the Account Holder user will receive a response with a transac
 #### Make a Transaction with an Account
 
 Although Third Party users do not require basi authentication they must provide their hashed key for Third Party specific requests.
-To make a transaction with an account the Third Party User may do a **patch** request through the following route:
+To make a transaction with an account the Third Party user may do a **patch** request through the following route:
 
 ```/transfer/{key}``` where the key is its own hashed key, for example:
 ```
@@ -450,7 +450,6 @@ The Third Party user must also provide the following information through the req
 - transactionType: Type of transaction,
     - SEND to send money to the account,
     - RECEIVE to receive money from the account 
-    - must be owned by the Account Holder
 - toAccountId: Identifier of the account to interact with,
 - secretKey: Secret key of the account to interact with
 - transfer: Amount to transfer.
