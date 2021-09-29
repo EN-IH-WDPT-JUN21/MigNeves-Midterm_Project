@@ -4,15 +4,19 @@
 
 1. [**Installation**](#Installation)
 2. [**Users**](#Users)  
-    1. [**Administrator**](#Administrator-admin)
+    1. [**Administrator (admin)**](#Administrator-admin)
     2. [**Account Holder**](#Account-holder)
     3. [**Third Party**](#Third-party)
-3. [**Accounts**](#Accounts)
+3. [**Banking Accounts**](#Banking-accounts)
     1. [**Savings**](#Savings)
     2. [**Credit Card**](#Credit-card)
     3. [**Checking**](#Checking)
     4. [**Student Checking**](#Student-checking)
-4. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
+4. [**Walkthrough the Available Requests**](#Walkthrough-the-available-requests)
+    1. [**Admin Allowed Requests**](#Admin-allowed-requests)
+    2. [**Account Holder Allowed Requests**](#Account-holder-allowed-requests)
+    3. [**Third Party Allowed Requests**](#Third-party-allowed-requests)
+    4. [**Not Authenticated Requests**](#Not-authenticated-requests)
 
 ## Installation
 
