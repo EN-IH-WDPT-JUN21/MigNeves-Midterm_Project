@@ -14,11 +14,6 @@
     2. [Account Holder Requests](#Contact)
     3. [Requests Without Authorization](#SalesRep)
 
-## Introduction
-
-The banking application only works with euros
-
-
 ## Installation
 
 Clone or download the project from this git repository.
