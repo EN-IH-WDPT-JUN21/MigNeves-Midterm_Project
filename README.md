@@ -514,7 +514,7 @@ Example of a request body:
 }   
 ```
 
-After the request the a response will be received with the Account Holder information such as:
+After the request the response will be received with the Account Holder information such as:
 ```
 {
     "id": 6,
