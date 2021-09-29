@@ -11,7 +11,7 @@
     1. [Admin Allowed Requests](#AdminRequests)
     2. [Account Holder Allowed Requests](#AccountHolderRequests)
     3. [Third Party Allowed Requests](#ThirdPartyRequests)
-    4. [Not Authenticated Requests] (#NotAuthenticated)
+    4. [Not Authenticated Requests](#NotAuthenticated)
 
 ## Installation
 
