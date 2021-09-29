@@ -63,6 +63,16 @@ public class Generalize {
         }
     }
 
+    // Method to get account by id if the AccountHolder is the owner
+    public Account getAccountFromIdAndName(String id, String name) {
+        Account account = getAccountFromId(id);
+        if (!account.getPrimaryOwner().getName().equals(name) && (account.getSecondaryOwner() == null || !account.getSecondaryOwner().getName().equals(name))) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "The account with id " + account.getId() + " is not owned by " + name);
+        } else {
+            return account;
+        }
+    }
+
     // get all accounts from user id
     public ListOfAccounts getAllAccounts(Long id) {
         accountUpdater.updateAccounts();

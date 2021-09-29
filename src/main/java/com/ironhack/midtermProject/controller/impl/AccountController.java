@@ -8,11 +8,15 @@ import com.ironhack.midtermProject.controller.interfaces.IAccountController;
 import com.ironhack.midtermProject.dao.Account;
 import com.ironhack.midtermProject.dao.AccountHolder;
 import com.ironhack.midtermProject.repository.AccountHolderRepository;
+import com.ironhack.midtermProject.security.CustomUserDetails;
+import com.ironhack.midtermProject.service.impl.CustomUserDetailsService;
 import com.ironhack.midtermProject.service.interfaces.IAccountService;
 import com.ironhack.midtermProject.utils.Generalize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -32,11 +36,17 @@ public class AccountController implements IAccountController {
     @Autowired
     Generalize generalizer;
 
-    // Method for an Admin to access the balance of an Account by id (other information apart from balance are provided)
+    // Method for an Admin or AccountHolder to access the balance of an Account by id (other information apart from balance are provided)
+    // If the user is an AccountHolder validate if the owner owns the Account
     @GetMapping("/balance/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public AccountReceipt getAccountBalanceById(@PathVariable("id") String id) {
-        Account account = generalizer.getAccountFromId(id);
+    public AccountReceipt getAccountBalanceById(Authentication authentication, @PathVariable("id") String id) {
+        Account account;
+        if (authentication.getAuthorities().stream().anyMatch(a -> a.getAuthority().equals("ROLE_ACCOUNT_HOLDER"))) {
+            account = generalizer.getAccountFromIdAndName(id, authentication.getName());
+        } else {
+            account = generalizer.getAccountFromId(id);
+        }
         return new AccountReceipt(account);
     }
 

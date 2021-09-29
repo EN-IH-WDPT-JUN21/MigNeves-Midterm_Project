@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 
 
 public interface IAccountController {
-    AccountReceipt getAccountBalanceById(String id);
+    AccountReceipt getAccountBalanceById(Authentication authentication, String id);
 
     AccountReceipt updateBalanceById(String id, BalanceDTO balance);
 
