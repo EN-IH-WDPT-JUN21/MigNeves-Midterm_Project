@@ -88,10 +88,15 @@ The following information about the Third Party user is stored in the database:
 ## Banking Accounts
 
 There are currently 4 diferent types of Banking Accounts, which are Savings, Credit Card, Checking and Student Checking
+All accounts have some common functionalities. They all have a unique identifier that has a prefix, identifying which type of account the id belongs to. They also have a balance, a creation date and a secret key.
+All accounts also have a status identifying if the account is active or frozen. A frozen account can not do transactions to other accounts.
+All accounts have a default penalty fee of 40€, however Student Checking, and Credit Card accounts will never be penalized with this fee.
+All accounts also have a primary owner and can optionally have a secondary owner. The owners are users of the type Account Holder.
+
 
 ### Savings
 The Savings account has the following properties:
-- id,
+- id (SA_#),
 - balance,
 - creation date,
 - secret key,
@@ -103,9 +108,17 @@ The Savings account has the following properties:
 - interest rate,
 - last update date;
 
-### Credit Card
+Apart from the common account functionalities Savings accounts have a minimum balance, an interest rate and a last update date. Every year the interest rate is applied to the balance's account through the following equation:
+```
+newBalance = oldBalance * (1 + interestRate)
+```
+The last update date keeps track of when the last interest rate was applied to the account's balance.
+The minimum balance defines the minimum amount for the account balance. If the balance ever goes below this minimum balance the penalty fee is applied.
+All transactions that lead to a negative balance will fail.
+
+### Credit Card 
 The Savings account has the following properties:
-- id,
+- id (CC_#),
 - balance,
 - creation date,
 - secret key,
@@ -117,9 +130,16 @@ The Savings account has the following properties:
 - interest rate,
 - last update date;
 
+Apart from the common account functionalities Credit Card accounts have a credit limit, an interest rate and a last update date. Every month the interest rate is applied to the balance's account through the following equation:
+```
+newBalance = oldBalance * (1 + (1/12)*interestRate)
+```
+The last update date keeps track of when the last interest rate was applied to the account's balance.
+The credit limit defines the maximum amount of credit allowed for the account. The Credit Card can never reach a higher credit than the credit limit and, as such, the penalty fee is never applied. All transactions that lead to a credit higher than the credit limit fail.
+
 ### Checking
 The Savings account has the following properties:
-- id,
+- id (CH_#),
 - balance,
 - creation date,
 - secret key,
@@ -131,9 +151,17 @@ The Savings account has the following properties:
 - montly maintenance fee,
 - last update date;
 
+Apart from the common account functionalities Credit Card accounts have a minimum balance, a monthly maintenance fee and a last update date. Every month the montlhy maintenance fee is deducted from the balance's account through the following equation:
+```
+newBalance = oldBalance - montlyMaintenanceFee
+```
+The last update date keeps track of when the last montlhy maitenance fee was applied to the account's balance.
+The minimum balance, similar to Savings accounts defines the minimum amount for the account balance. If the balance ever goes below this minimum balance the penalty fee is applied.
+All transactions that lead to a negative balance will fail.
+
 ### Student Checking
 The Savings account has the following properties:
-- id,
+- id (SC_#),
 - balance,
 - creation date,
 - secret key,
@@ -141,6 +169,24 @@ The Savings account has the following properties:
 - primary owner,
 - (optional) secondary owner,
 - status;
+
+Student Checking accounts do not have any functionalities apart from the basic account functionalities.
+
+## Walkthrough the Available Requests
+
+The possible requests can be divided in terms of permissions.
+
+### Admin Requests
+
+1. Access Account Balance
+
+To access the balance of a particular account the Admin user may do a get request through the following route:
+```
+/balance/{id}
+```
+where id is the Account's identifier (ex. CC_1)
+
+2. Change Account Balance
 
 ## Use Case Diagram
 
