@@ -158,7 +158,7 @@ To change the balance of a particular account the Admin user may do a **patch** 
 ```
 /balance/CC_1
 ```
-The Admin user must also provide the new balance in euros (€) through the request body in the following example:
+The Admin user must also provide the new balance in euros (€) through the request body like in the following example:
 ```
 {
     "balance": {
