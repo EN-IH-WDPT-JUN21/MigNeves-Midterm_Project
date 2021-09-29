@@ -49,17 +49,23 @@ properties are defined in each test.
 
 ## Users
 
-In this banking application there are three types of Users (Admin, AccountHolder and ThirdParty), however, ThirdParty User's do not need to authenticate through the common username and password method.
+In this banking application there are three types of Users (Admin, AccountHolder and ThirdParty), however, ThirdParty User's do not require authentication through the usual username and password.
 
 ### Admin
 
-The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to access banking account information as well as change the balance.
+The Admin User is responsible for the creation and management of User and Banking accounts. When authenticated they have permission to create new accounts, add third party users and access banking account information as well as change its balance.
+The Admin's have stored in the database:
+```
+id
+name
+encrypted password
+```
 
-### AccountHolder
+### Account Holder
 
 An AccountHolder is a banking client and can own or co-own multiple banking accounts. Through this application the AccountHolder can access his accounts' informations as well as process transactions from one of his accounts to another account.
 
-### ThirdParty
+### Third Party
 
 A ThirdParty can only send or receive money from existing accounts by providing his own unique HashedKey. 
 
