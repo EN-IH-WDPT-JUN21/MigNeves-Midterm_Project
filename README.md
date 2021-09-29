@@ -16,10 +16,7 @@
 
 ## Introduction
 
-
-
-### Functions
-
+The banking application only works with euros
 
 
 ## Installation
@@ -87,85 +84,151 @@ All accounts have some common functionalities and properties:
 
 ### Savings
 
-Apart from the common account functionalities Savings accounts have a minimum balance, an interest rate and a last update date. Every year the interest rate is applied to the balance's account through the following equation:
-```
-newBalance = oldBalance * (1 + interestRate)
-```
-The last update date keeps track of when the last interest rate was applied to the account's balance.
-The minimum balance defines the minimum amount for the account balance. If the balance ever goes below this minimum balance the penalty fee is applied.
-All transactions that lead to a negative balance will fail.
+Apart from the common account functionalities Savings accounts also have:
+- A minimum balance:
+    - If the account balance reaches a lower value the penalty fee is applied
+- An interest rate applied yearly through the equation:
+    - ```newBalance = oldBalance * (1 + interestRate)```
+- Transactions that would lead to a negative balance are not allowed.
 
 ### Credit Card 
-The Savings account has the following properties:
-- id (CC_#),
-- balance,
-- creation date,
-- secret key,
-- penalty fee,
-- primary owner,
-- (optional) secondary owner,
-- status,
-- credit limit,
-- interest rate,
-- last update date;
 
-Apart from the common account functionalities Credit Card accounts have a credit limit, an interest rate and a last update date. Every month the interest rate is applied to the balance's account through the following equation:
-```
-newBalance = oldBalance * (1 + (1/12)*interestRate)
-```
-The last update date keeps track of when the last interest rate was applied to the account's balance.
-The credit limit defines the maximum amount of credit allowed for the account. The Credit Card can never reach a higher credit than the credit limit and, as such, the penalty fee is never applied. All transactions that lead to a credit higher than the credit limit fail.
+Apart from the common account functionalities Credit Card accounts also have:
+- A credit limit
+- An interest rate applied monthly through the equation:
+    - ```newBalance = oldBalance * (1 + (1/12)*interestRate)```
+- Transactions that would lead to a credit greater than the limit are not allowed and, as so, the penalty fee is never applied.
 
 ### Checking
-The Savings account has the following properties:
-- id (CH_#),
-- balance,
-- creation date,
-- secret key,
-- penalty fee,
-- primary owner,
-- (optional) secondary owner,
-- status,
-- minimum balance,
-- montly maintenance fee,
-- last update date;
 
-Apart from the common account functionalities Credit Card accounts have a minimum balance, a monthly maintenance fee and a last update date. Every month the montlhy maintenance fee is deducted from the balance's account through the following equation:
-```
-newBalance = oldBalance - montlyMaintenanceFee
-```
-The last update date keeps track of when the last montlhy maitenance fee was applied to the account's balance.
-The minimum balance, similar to Savings accounts defines the minimum amount for the account balance. If the balance ever goes below this minimum balance the penalty fee is applied.
-All transactions that lead to a negative balance will fail.
+Apart from the common account functionalities Crhecking accounts also have:
+- A minimum balance:
+    - If the account balance reaches a lower value the penalty fee is applied
+- A monthly maitenance fee applied monthly through the equation:
+    - ```newBalance = oldBalance - montlyMaintenanceFee```
+- Transactions that would lead to a negative balance are not allowed.
 
 ### Student Checking
-The Savings account has the following properties:
-- id (SC_#),
-- balance,
-- creation date,
-- secret key,
-- penalty fee,
-- primary owner,
-- (optional) secondary owner,
-- status;
 
-Student Checking accounts do not have any functionalities apart from the basic account functionalities.
+Student Checking accounts do not have any other functionalities apart from the basic account functionalities.
 
 ## Walkthrough the Available Requests
 
 The possible requests can be divided in terms of permissions.
 
-### Admin Requests
+### Admin Allowed Requests
 
-1. Access Account Balance
+#### Access Account Information
 
-To access the balance of a particular account the Admin user may do a get request through the following route:
+To access the balance and other informations of a particular account the Admin user may do a **get** request through the following route:
+```/account/{id}``` where id is the Account's identifier, for example:
 ```
-/balance/{id}
+/account/CC_1
 ```
-where id is the Account's identifier (ex. CC_1)
+After the request the Admin user will receive a response such as:
+```
+{
+    "id": "CC_1",
+    "balance": {
+        "currency": "EUR",
+        "amount": 1488.09
+    },
+    "penaltyFee": {
+        "currency": "EUR",
+        "amount": 40.00
+    },
+    "creationDate": "2000-01-01",
+    "status": "ACTIVE",
+    "primaryOwnerName": "Jim Halpert",
+    "secondaryOwnerName": "Pam Beesly",
+    "creditLimit": {
+        "currency": "EUR",
+        "amount": 300.00
+    },
+    "interestRate": 0.2000
+}
+```
 
-2. Change Account Balance
+#### Change Account Balance
+
+To change the balance of a particular account the Admin user may do a **patch** request through the following route:
+```/balance/{id}``` where id is the Account's identifier, for example:
+```
+/balance/CC_1
+```
+The Admin user must also provide the new balance in euros (€) through the request body in the following way:
+```
+    "balance": {
+        "amount": 300.00
+    }
+```
+
+After the request the Admin user will receive a response with the updated balance value such as:
+```
+{
+    "id": "CC_1",
+    "balance": {
+        "currency": "EUR",
+        "amount": 300.00
+    },
+    "penaltyFee": {
+        "currency": "EUR",
+        "amount": 40.00
+    },
+    "creationDate": "2000-01-01",
+    "status": "ACTIVE",
+    "primaryOwnerName": "Jim Halpert",
+    "secondaryOwnerName": "Pam Beesly",
+    "creditLimit": {
+        "currency": "EUR",
+        "amount": 300.00
+    },
+    "interestRate": 0.2000
+}
+```
+If the user provides an **invalid** value for the balance (lower than the credit limit for Credit Card accounts or negative for all other accounts) the balance will be updated with the **minimum** allowed value.
+
+#### Create a Banking Account
+
+To create a new banking account the Admin user may do a **post** request through the following route:
+```/create/account```
+
+The Admin user must also provide the new account information through the request body:
+- accountType: Can have the values CHECKING, SAVINGS or CREDIT_CARD and defines what type of account to create,
+- balance: Defines the balance value for the account, balance values ower than 0 or lower than the credit limit for Credit Card will default to the minimum allowed value,
+- primaryOwnerId: Identifier of the primary Account Holder user,
+- secondaryOwnerId (optional): Identifier of the secondary Account Holder user
+```
+    
+    "balance": {
+        "amount": 300.00
+    }
+```
+
+After the request the Admin user will receive a response with the updated balance value such as:
+```
+{
+    "id": "CC_1",
+    "balance": {
+        "currency": "EUR",
+        "amount": 300.00
+    },
+    "penaltyFee": {
+        "currency": "EUR",
+        "amount": 40.00
+    },
+    "creationDate": "2000-01-01",
+    "status": "ACTIVE",
+    "primaryOwnerName": "Jim Halpert",
+    "secondaryOwnerName": "Pam Beesly",
+    "creditLimit": {
+        "currency": "EUR",
+        "amount": 300.00
+    },
+    "interestRate": 0.2000
+}
+```
+If the user provides an **invalid** value for the balance (lower than the credit limit for Credit Card accounts or negative for all other accounts) the balance will be updated with the **minimum** allowed value.
 
 ## Use Case Diagram
 
