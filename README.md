@@ -8,9 +8,10 @@
     1. [How to navigate the menu](#How-to-navigate-the-menu)
 3. [**Accounts**](#Help-menu)
 4. [**Walkthrough the Available Requests**](#Description-of-the-CRM-Components)
-    1. [Admin Only Requests](#Admin)
-    2. [Account Holder Requests](#AccountHolder)
-    3. [Requests Without Authorization](#ThirdParty)
+    1. [Admin Allowed Requests](#AdminRequests)
+    2. [Account Holder Allowed Requests](#AccountHolderRequests)
+    3. [Third Party Allowed Requests](#ThirdPartyRequests)
+    4. [Not Authenticated Requests] (#NotAuthenticated)
 
 ## Installation
 
